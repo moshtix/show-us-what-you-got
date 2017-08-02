@@ -1,0 +1,73 @@
+{
+  "name": "menu",
+  "children": [
+    {
+      "name": "Account",
+      "children": [
+        {
+          "name": "Preferences",
+          "path": "/preferences"
+        },
+        {
+          "name": "Contact Details",
+          "path": "/contact-details"
+        },
+        {
+          "name": "Manage Users",
+          "path": "/manage-users"
+        }
+      ]
+    },
+    {
+      "name": "Design",
+      "children": [
+        {
+          "name": "Themes",
+          "path": "/themes"
+        },
+        {
+          "name": "Gallery",
+          "path": "/gallery"
+        },
+        {
+          "name": "Templates",
+          "path": "/templates"
+        }
+      ]
+    },
+    {
+      "name": "Content",
+      "children": [
+        {
+          "name": "Pages",
+          "path": "/pages"
+        },
+        {
+          "name": "Links",
+          "path": "/links"
+        },
+        {
+          "name": "Widgets",
+          "path": "/widgets"
+        }
+      ]
+    },
+    {
+      "name": "Reporting",
+      "children": [
+        {
+          "name": "Dashboard",
+          "path": "/dashboard"
+        },
+        {
+          "name": "Reports",
+          "path": "/reports"
+        },
+        {
+          "name": "Scheduling",
+          "path": "/scheduling"
+        }
+      ]
+    }
+  ]
+}
