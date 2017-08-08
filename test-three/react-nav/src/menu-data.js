@@ -1,4 +1,6 @@
-{
+
+
+export default [{
   "name": "menu",
   "children": [
     {
@@ -58,4 +60,4 @@
       ]
     }
   ]
-}
+}]

@@ -2,10 +2,21 @@ import Logger from './helpers/logger';
 
 let logger = new Logger();
 
-//Your code should go here instead of the welcome message below. Create and modify additional files as necessary.
+export function bossHog(num) {
+  let result;
+  if (num % 3 === 0 && num % 5 === 0) {
+    result = "BossHog";
+  } else if (num % 3 === 0) {
+    result = "Boss";
+  } else if (num % 5 === 0) {
+    result = "Hog";
+  } else {
+    result = num;
+  }
+  return result;
+}
 
-const welcomeMessage = "Congrats, you're up and running! Welcome to the first moshtix code challenge! " +
-    "Please replace this message with your solution and feel free to add " +
-    "or modify other files as necessary. Good luck : )";
 
-logger.log(welcomeMessage);
+for (var i = 0; i <= 100; i++) {
+  logger.log(bossHog(i));
+}
