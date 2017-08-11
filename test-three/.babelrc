@@ -1,7 +1,7 @@
 {
   "presets": [
-		["es2017"],
-		"react",
-		"env"
-	]
+        ["es2017"],
+        "react",
+        "env"
+    ]
 }

@@ -1,51 +1,51 @@
 $menuWidth: 200px;
 
 .test-menu {
-	display: inline-block;
-	margin: 0;
-	padding: 0;
-	list-style-type: none;
-	
-	> li {
-		margin: 0;
-		padding: 0;
-		position: relative;
-		padding: 8px;
-		width: $menuWidth;
-		color: white;
-		cursor: pointer;
-		border-right: 3px solid #666;
-		
-		&.has-children {
-			border-right: 3px solid #AAA;
-		}
-		
-		> .test-menu {
-			display: none;
-			position: absolute;
-			z-index: 10;
-			right: -$menuWidth;
-			top: 0;
-		}
-		
-		&:hover {
-			> .test-menu {
-				display: inline-block;
-			}
-		}
-	}
-	
-	&.menu-level-0 {
-		> li {
-			background: #009CDC;
-			&:hover {background: #B2E1F4;}
-		}
-	}
-	
-	& .menu-level-1 {
-		> li {
-			background: #B2E1F4;
-			&:hover {background: #CCEBF8;}
-		}
-	}
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    
+    > li {
+        margin: 0;
+        padding: 0;
+        position: relative;
+        padding: 8px;
+        width: $menuWidth;
+        color: white;
+        cursor: pointer;
+        border-right: 3px solid #666;
+        
+        &.has-children {
+            border-right: 3px solid #AAA;
+        }
+        
+        > .test-menu {
+            display: none;
+            position: absolute;
+            z-index: 10;
+            right: -$menuWidth;
+            top: 0;
+        }
+        
+        &:hover {
+            > .test-menu {
+                display: inline-block;
+            }
+        }
+    }
+    
+    &.menu-level-0 {
+        > li {
+            background: #009CDC;
+            &:hover {background: #B2E1F4;}
+        }
+    }
+    
+    & .menu-level-1 {
+        > li {
+            background: #B2E1F4;
+            &:hover {background: #CCEBF8;}
+        }
+    }
 }

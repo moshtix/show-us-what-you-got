@@ -11,17 +11,17 @@ class MenuApp extends Component {
     }
 
     render() {
-		let junk = [];
-		for(let i = 0; i < 100; i++) {
-			junk.push(<br />);
-		}
-		
+        let junk = [];
+        for(let i = 0; i < 100; i++) {
+            junk.push(<br />);
+        }
+        
         return (
-			<div>
-				<TestLogo />
-				<TestMenu data={MenuData} />
-				{junk}
-			</div>
+            <div>
+                <TestLogo />
+                <TestMenu data={MenuData} />
+                {junk}
+            </div>
         );
     }
 }

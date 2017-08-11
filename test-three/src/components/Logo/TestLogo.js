@@ -8,11 +8,11 @@ class TestLogo extends Component {
 
     render() {
         return (
-			<div className="test-logo">
-				<div className="logo">
-					Generic Website
-				</div>
-			</div>
+            <div className="test-logo">
+                <div className="logo">
+                    Generic Website
+                </div>
+            </div>
         );
     }
 }
