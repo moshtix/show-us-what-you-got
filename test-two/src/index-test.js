@@ -21,7 +21,7 @@ test("go made the API call the correct number of times", async () => {
 
   await go();
 
-  expect(gitHubService.getUsersForOrganisation).toBeCalledTimes(22);
+  expect(gitHubService.getUsersForOrganisation).toBeCalledTimes(pages);
 })
 
 test("go logged error", async () => {
