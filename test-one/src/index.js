@@ -1,25 +1,20 @@
 import { log } from "./helpers/logger";
 
+export const checkDivisibility = num => {
+  return (num % 5 === 0 && num % 3 === 0) ?
+              "BossHog" : (num % 5 === 0) ?
+                  "Hog" : (num % 3 === 0) ?
+                    "Boss" : num;
+}
+
 export const go = async () => {
-  const bossHog = num => {
-    let output = "";
+  let output = "";
 
-    for (let i = 1; i <= num; i++) {
-      if (i % 5 === 0 && i % 3 === 0) {
-        output += "BossHog\n";
-      } else if (i % 5 === 0) {
-        output += "Hog\n";
-      } else if (i % 3 === 0) {
-        output += "Boss\n"
-      } else {
-        output += `${i}\n`;
-      }
-    }
-
-    return output;
+  for (let i = 1; i <= 100; i++) {
+    output += `${checkDivisibility(i)}\n`;
   }
 
-  await log(bossHog(100));
+  await log(output);
 };
 
 go();
