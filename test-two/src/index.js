@@ -3,7 +3,7 @@ import { getUsersForOrganisation } from "./services/github";
 
 const baseUrl = "https://api.github.com/";
 const organisationId = "google";
-const gitHubApiAuthToken = "1f55a5198950f9517a7c35bc25ee124acde9831c";
+const gitHubApiAuthToken = "";
 export const pages = 22; // There are 2144 users so 22 pages are sufficient
 
 export const go = async () => {
