@@ -6,11 +6,12 @@ const getAuthenticationQueryString = async apiAuthenticationToken =>
 export const getUsersForOrganisation = async (
   baseUrl,
   apiAuthenticationToken,
-  organisationId
+    organisationId,
+  pageNumber
 ) => {
   return get(
-    `${baseUrl}orgs/${organisationId}/members${await getAuthenticationQueryString(
-      apiAuthenticationToken
-    )}`
+      `${baseUrl}orgs/${organisationId}/members${await getAuthenticationQueryString(
+          apiAuthenticationToken
+      )}&per_page=100&page=${pageNumber}`
   );
 };
