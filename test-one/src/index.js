@@ -1,14 +1,25 @@
 import { log } from "./helpers/logger";
 
 export const go = async () => {
-  // Your code should go here instead of the welcome message below. Create and modify additional files as necessary/appropriate.
+  const bossHog = num => {
+    let output = "";
 
-  const welcomeMessage =
-    "Congrats, you're up and running! Welcome to the first moshtix code challenge! " +
-    "Please replace this message with your solution and feel free to add " +
-    "or modify other files as necessary. Good luck : )";
+    for (let i = 1; i <= num; i++) {
+      if (i % 5 === 0 && i % 3 === 0) {
+        output += "BossHog\n";
+      } else if (i % 5 === 0) {
+        output += "Hog\n";
+      } else if (i % 3 === 0) {
+        output += "Boss\n"
+      } else {
+        output += `${i}\n`;
+      }
+    }
 
-  await log(welcomeMessage);
+    return output;
+  }
+
+  await log(bossHog(100));
 };
 
 go();
