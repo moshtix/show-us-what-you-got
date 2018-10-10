@@ -1,4 +1,4 @@
-import { go } from "./index";
+import { go, pages } from "./index";
 import * as logger from "./helpers/logger";
 import * as gitHubService from "./services/github";
 
@@ -13,8 +13,16 @@ test("go logged users from github service", async () => {
 
   await go();
 
-  expect(logger.log).toBeCalledWith(expectedOutput);
+  expect(logger.log).toBeCalledWith(expectedOutput.repeat(pages));
 });
+
+test("go made the API call the correct number of times", async () => {
+  gitHubService.getUsersForOrganisation = jest.fn();
+
+  await go();
+
+  expect(gitHubService.getUsersForOrganisation).toBeCalledTimes(22);
+})
 
 test("go logged error", async () => {
   logger.log = jest.fn();

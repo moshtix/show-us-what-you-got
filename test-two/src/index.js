@@ -4,7 +4,7 @@ import { getUsersForOrganisation } from "./services/github";
 const baseUrl = "https://api.github.com/";
 const organisationId = "google";
 const gitHubApiAuthToken = "1f55a5198950f9517a7c35bc25ee124acde9831c";
-const pages = 22;
+export const pages = 22;
 
 export const go = async () => {
   let output = "";
