@@ -10,7 +10,7 @@ test("returned request without error", async () => {
   }));
 
   const response = await get("http://google.com", {
-    headers: { sample: "one" }
+    headers: { sample: "two" }
   });
 
   expect(response).toEqual(message);

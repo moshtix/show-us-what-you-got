@@ -11,8 +11,11 @@ export const get = async url => {
   const json = await response.json();
 
   if (response.status === 200) {
+
     return json;
   } else {
     throw Error(json.Message);
   }
+
+
 };
