@@ -33,12 +33,14 @@ export const go = async () => {
     parallelCalls.push(getPageOfUsers(i));
   }
   
-  Promise.all(parallelCalls).then(() => {
-    outputArray.sort().forEach(entry => {
-      output += entry;
-    });
-    log(output);
+  await Promise.all(parallelCalls);
+
+  // Sort array of users and add them to the output string
+  outputArray.sort().forEach(entry => {
+    output += entry;
   });
+
+  log(output);
 };
 
 go();
