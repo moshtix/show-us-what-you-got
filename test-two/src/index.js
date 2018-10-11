@@ -3,39 +3,42 @@ import { getUsersForOrganisation } from "./services/github";
 
 const baseUrl = "https://api.github.com/";
 const organisationId = "google";
-const gitHubApiAuthToken = "";
-export const pages = 22; // There are 2144 users so 22 pages are sufficient
+const gitHubApiAuthToken = "59d6a51636757100cae50bd5bc2739aabad30bcf";
+export const pages = 23;
 
 export const go = async () => {
   let output = "";
-  let parallellCalls = [];
+  let outputArray = [];
+  let parallelCalls = [];
 
   const getPageOfUsers = async pageNumber => {
-    const users = await getUsersForOrganisation(
-      baseUrl,
-      gitHubApiAuthToken,
-      organisationId,
-      pageNumber
-    );
+    try {
+      const users = await getUsersForOrganisation(
+        baseUrl,
+        gitHubApiAuthToken,
+        organisationId,
+        pageNumber
+      );
 
-    output += users.reduce((result, user) => {
-      return `${result}Username: ${user.login}\n`;
-    }, "");
+      outputArray.push(users.reduce((result, user) => {
+        return `${result}Username: ${user.login}\n`;
+      }, ""));
+    } catch (error) {
+      await log(error.message);
+    }
   }
 
   // Create an array of API calls for each page of 100 results
   for (let i = 1; i <= pages; i++) {
-    parallellCalls.push(getPageOfUsers(i));
+    parallelCalls.push(getPageOfUsers(i));
   }
-
-  try {
-    // Perform the API calls simultaneously and log results when finished
-    await Promise.all(parallellCalls).then(() => {
-      log(output);
+  
+  Promise.all(parallelCalls).then(() => {
+    outputArray.sort().forEach(entry => {
+      output += entry;
     });
-  } catch (error) {
-    await log(error.message);
-  }
+    log(output);
+  });
 };
 
 go();

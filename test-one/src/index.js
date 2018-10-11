@@ -1,10 +1,10 @@
 import { log } from "./helpers/logger";
 
 export const checkDivisibility = num => {
-  return (num % 5 === 0 && num % 3 === 0) ?
-              "BossHog" : (num % 5 === 0) ?
-                  "Hog" : (num % 3 === 0) ?
-                    "Boss" : num;
+  return (num % 15 === 0) ?
+    "BossHog" : (num % 5 === 0) ?
+      "Hog" : (num % 3 === 0) ?
+        "Boss" : num;
 }
 
 export const go = async () => {
