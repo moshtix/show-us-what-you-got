@@ -1,9 +1,9 @@
 import { go } from "./index";
 import * as logger from "./helpers/logger";
 
-test("logged welcome message", async () => {
+test("Print out correct output", async () => {
   const expectedOutput =
-    "Congrats, you're up and running! Welcome to the first moshtix code challenge! Please replace this message with your solution and feel free to add or modify other files as necessary. Good luck : )";
+    "12Boss4HogBoss78BossHog11Boss1314BossHog1617Boss19HogBoss2223BossHog26Boss2829BossHog3132Boss34HogBoss3738BossHog41Boss4344BossHog4647Boss49HogBoss5253BossHog56Boss5859BossHog6162Boss64HogBoss6768BossHog71Boss7374BossHog7677Boss79HogBoss8283BossHog86Boss8889BossHog9192Boss94HogBoss9798BossHog";
 
   logger.log = jest.fn();
 
