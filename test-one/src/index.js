@@ -18,14 +18,7 @@ export const go = async () => {
     }
   };
 
-  log(result);
-  
-  const welcomeMessage =
-    "Congrats, you're up and running! Welcome to the first moshtix code challenge! " +
-    "Please replace this message with your solution and feel free to add " +
-    "or modify other files as necessary. Good luck : )";
-
-  await log(welcomeMessage);
+  await log(result.trim());
 };
 
 go();
