@@ -25,3 +25,12 @@ body {
   height: 160px;
   box-shadow: 0 0 3px lightgray;
 }
+
+.card__title {
+  font-size: 20;
+  margin-bottom: 7px;
+}
+
+.card__content {
+  font-size: 15.5;
+}
