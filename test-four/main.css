@@ -61,3 +61,18 @@ body {
   }
 
 }
+
+@media only screen and (min-width: 1024px) {
+
+  .card {
+    width: 29%;
+  }
+
+  .card__header {
+    height: 190px;
+  }
+
+  .card img {
+    object-fit: cover;
+  }
+}
