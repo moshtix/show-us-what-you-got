@@ -3,7 +3,25 @@ body {
 }
 
 .container {
-  padding: 30px;
+  padding: 2.1vw;
+  margin: auto;
+  max-width: 1200px;
 }
 
-/* Place your CSS here... */
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 380px));
+  grid-gap: 1.5rem;
+}
+
+.card__image {
+  max-width: 100%;
+  min-width: 100%;
+  max-height: 176px;
+}
+
+.card__body {
+  padding: 15px;
+  height: 160px;
+  box-shadow: 0 0 3px lightgray;
+}
