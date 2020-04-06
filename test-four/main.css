@@ -7,3 +7,51 @@ body {
 }
 
 /* Place your CSS here... */
+
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0;
+  margin: 0;
+  align-content: stretch;
+}
+
+.card {
+  flex-basis: 550px;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+}
+
+.card:nth-of-type(3) {
+  flex-grow: 2;
+}
+
+.card__header {
+  overflow: hidden;
+  height: 253px;
+}
+
+img {
+  width: 100%;
+  height: auto;
+  padding:0;
+}
+
+.card__body {
+  box-shadow:  0 3px 5px grey;
+  min-height: 200px;
+  padding:0px
+}
+
+.card__title {
+  font-size: 25px;
+  font-weight: bold;
+  padding: 10px 10px 0px 10px;
+}
+
+.card__content {
+  padding: 10px;
+  font-size: 18px;
+}
+
