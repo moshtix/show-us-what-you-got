@@ -15,7 +15,7 @@ describe ("HogBoss Application", () => {
     let x = await BossHog(20);
     expect(x).toBe("Hog");
   });
-  test("should print the number if not divisable by 3 or 5", async () => {
+  test("should print the number if not divisible by 3 or 5", async () => {
     let x = await BossHog(2);
     expect(x).toBe(2);
   });
