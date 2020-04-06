@@ -43,3 +43,21 @@ body {
 .card__content {
   text-align: justify;
 }
+
+
+@media only screen and (min-width: 768px) {
+
+  .card {
+    width: 45%;
+  }
+
+
+  .card__header {
+    height: 190px;
+  }
+
+  .card img {
+    object-fit: cover;
+  }
+
+}
