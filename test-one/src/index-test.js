@@ -1,24 +1,22 @@
-import { go } from "./index";
+import { BossHog } from "./index";
 import * as logger from "./helpers/logger";
 
-// test("logged welcome message", async () => {
-//   const expectedOutput =
-//     "Congrats, you're up and running! Welcome to the first moshtix code challenge! Please replace this message with your solution and feel free to add or modify other files as necessary. Good luck : )";
+describe ("HogBoss Application", () => {
 
-//   logger.log = jest.fn();
-
-//   await go();
-
-//   expect(logger.log).toBeCalledWith(expectedOutput);
-// });
-
-// introduce new test here
-test("Prints Hog, Boss and HogBoss", async () => {
-  
-  const result = " "
-  logger.log = jest.fn();
-
-  await go();
-
-  expect(logger.log).toBeCalledWith(expectedOutput);
-});
+  test("should print BossHog as number is divisible by 3 and 5", async () => {
+    let x = await BossHog(90);
+    expect(x).toBe("BossHog");
+  });
+  test("should print Boss as number is divisible by 3", async () => {
+    let x = await BossHog(9);
+    expect(x).toBe("Boss");
+  });
+  test("should print Hog as number is divisible by 5 ", async () => {
+    let x = await BossHog(20);
+    expect(x).toBe("Hog");
+  });
+  test("should print the number if not divisable by 3 or 5", async () => {
+    let x = await BossHog(2);
+    expect(x).toBe(2);
+  });
+})
