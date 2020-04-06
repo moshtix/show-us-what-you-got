@@ -1,24 +1,23 @@
 import { log } from "./helpers/logger";
 
-export const go = async () => {
-  // Your code should go here instead of the welcome message below. Create and modify additional files as necessary/appropriate.
-  const array = Array.from({length: 100}, (v, i) => i+1);
-  
-  let result = ''
+const isDivisibleBy = (num, mod) => {
+  return num % mod === 0;
+}
 
-  for (let i = 0; i < array.length; i++) {
-    if (array[i] % 3 === 0 && array[i] % 5 === 0) {
-      result += 'BossHog ';
-    } else if (array[i] % 3 === 0) {
-      result += 'Boss ';
-    } else if (array[i] % 5 === 0) {
-      result += 'Hog ';
-    } else {
-      result += `${array[i]} `;
-    }
-  };
+export const main = (num) => {
+  switch(true) {
+    case isDivisibleBy(num, 15): return "BossHog";
+    case isDivisibleBy(num,  3): return "Boss";
+    case isDivisibleBy(num,  5): return "Hog";
+    default:                
+      return num;
+  }
+}
 
-  await log(result.trim());
+export const go = async (num) => {
+  const array = Array.from({length: 100}, (v, i) => main(i+1));
+  const result = array.join().replace(/,/g, " ");
+  await log(result);
 };
 
 go();
