@@ -7,7 +7,7 @@ type MenuSubItemProps = {
 
 type MenuItemProps = {
   name: string;
-  children: any;
+  children?: any;
 };
 
 class MenuSubItem extends Component<MenuSubItemProps> {
@@ -59,6 +59,9 @@ export class Menu extends Component {
           {subMenuItems}
         </MenuItem>
       );
+    }
+    else{
+        menuItems.push(<MenuItem name={menuItem.name} key = {menuItem.name}/>)
     }
     return <div key={menuItem.name}>{menuItems}</div>;
   }
