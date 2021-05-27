@@ -35,7 +35,7 @@ export class Menu extends Component {
   }
 
   createMenuRender() {
-    const menuJsonObject = this.parseJsonFile()
+    const menuJsonObject = this.parseJsonFile();
     const menuRender = menuJsonObject.menu.map(
       (menuItem: any, index: number) => {
         return this.createMenuItems(menuItem, index);
@@ -48,22 +48,45 @@ export class Menu extends Component {
   createMenuItems(menuItem: any, index: number): JSX.Element {
     const menuItems = [];
     if (menuItem.children) {
-      const subMenuItems = [];
-      const menuChildren = menuItem.children.map((ch: any, index: number) => {
-        return <MenuSubItem name={ch.name} key={index + ch.name} />;
-      });
-      subMenuItems.push(...menuChildren);
+      menuItems.push(this.findChildren(menuItem));
+    } else {
+      menuItems.push(<MenuItem name={menuItem.name} key={menuItem.name} />);
+    }
+    return <div key={menuItem.name}>{menuItems}</div>;
+  }
 
-      menuItems.push(
-        <MenuItem name={menuItem.name} key={index + menuItem.name}>
-          {subMenuItems}
+  findChildren(menuItem: any) {
+    const childOfChildFound = (
+      <MenuSubItem
+        name={menuItem.name}
+        children={menuItem.children}
+        key={menuItem.name}
+      />
+    );
+    let menuChildren = [childOfChildFound];
+
+    if (menuItem.children) {
+      menuChildren = menuItem.children.map((ch: any) => {
+        if (ch.children) {
+          return (
+            <MenuItem name={ch.name} key={ch.name}>
+              {ch.children.map((child: any) => {
+                return this.findChildren(child);
+              })}
+            </MenuItem>
+          );
+        } else {
+          return <MenuSubItem name={ch.name} key={ch.name} />;
+        }
+      });
+      return (
+        <MenuItem name={menuItem.name} key={menuItem.name}>
+          {menuChildren}
         </MenuItem>
       );
     }
-    else{
-        menuItems.push(<MenuItem name={menuItem.name} key = {menuItem.name}/>)
-    }
-    return <div key={menuItem.name}>{menuItems}</div>;
+
+    return menuChildren;
   }
 
   render() {

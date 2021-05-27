@@ -18,7 +18,8 @@
       "name": "Design",
       "children": [
         {
-          "name": "Themes"
+          "name": "Themes",
+          "children": [{ "name": "Dark Mode" }]
         },
         {
           "name": "Gallery"
@@ -56,6 +57,14 @@
         }
       ]
     },
-    {"name": "Contact"}
+    {
+      "name": "Contact",
+      "children": [
+        {
+          "name": "Email",
+          "children": [{ "name": "AUS Office" }, { "name": "NZ Office" }]
+        }
+      ]
+    }
   ]
 }
