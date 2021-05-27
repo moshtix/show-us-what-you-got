@@ -31,10 +31,40 @@ export class Menu extends Component {
   parseJsonFile() {
     const menuJsonText = JSON.stringify(menuJson);
     const menuJsonObject = JSON.parse(menuJsonText);
+    return menuJsonObject;
+  }
+
+  createMenuRender() {
+    const menuJsonObject = this.parseJsonFile()
+    const menuRender = menuJsonObject.menu.map(
+      (menuItem: any, index: number) => {
+        return this.createMenuItems(menuItem, index);
+      }
+    );
+
+    return menuRender;
+  }
+
+  createMenuItems(menuItem: any, index: number): JSX.Element {
+    const menuItems = [];
+    if (menuItem.children) {
+      const subMenuItems = [];
+      const menuChildren = menuItem.children.map((ch: any, index: number) => {
+        return <MenuSubItem name={ch.name} key={index + ch.name} />;
+      });
+      subMenuItems.push(...menuChildren);
+
+      menuItems.push(
+        <MenuItem name={menuItem.name} key={index + menuItem.name}>
+          {subMenuItems}
+        </MenuItem>
+      );
+    }
+    return <div key={menuItem.name}>{menuItems}</div>;
   }
 
   render() {
-    this.parseJsonFile();
-    return <p>Menu will go here.</p>;
+    const menuRender = this.createMenuRender();
+    return <div>{menuRender}</div>;
   }
 }

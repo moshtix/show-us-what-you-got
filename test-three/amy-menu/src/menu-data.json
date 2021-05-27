@@ -1,6 +1,5 @@
 {
-  "name": "menu",
-  "children": [
+  "menu": [
     {
       "name": "Account",
       "children": [
