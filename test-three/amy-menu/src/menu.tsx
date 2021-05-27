@@ -1,16 +1,11 @@
 import { Component } from "react";
 import menuJson from "./menu-data.json";
 
-type MenuSubItemProps = {
-  name: string;
-};
-
 type MenuItemProps = {
   name: string;
-  children?: any;
 };
 
-class MenuSubItem extends Component<MenuSubItemProps> {
+class MenuSubItem extends Component<MenuItemProps> {
   render() {
     return <li>{this.props.name}</li>;
   }
