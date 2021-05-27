@@ -7,7 +7,11 @@ type MenuItemProps = {
 
 class MenuSubItem extends Component<MenuItemProps> {
   render() {
-    return <li>{this.props.name}</li>;
+    return (
+      <li>
+        {this.props.name}
+      </li>
+    );
   }
 }
 
@@ -31,16 +35,14 @@ export class Menu extends Component {
 
   createMenuRender() {
     const menuJsonObject = this.parseJsonFile();
-    const menuRender = menuJsonObject.menu.map(
-      (menuItem: any, index: number) => {
-        return this.createMenuItems(menuItem, index);
-      }
-    );
+    const menuRender = menuJsonObject.menu.map((menuItem: any) => {
+      return this.createMenuItems(menuItem);
+    });
 
     return menuRender;
   }
 
-  createMenuItems(menuItem: any, index: number): JSX.Element {
+  createMenuItems(menuItem: any): JSX.Element {
     const menuItems = [];
     if (menuItem.children) {
       menuItems.push(this.findChildren(menuItem));
@@ -61,17 +63,17 @@ export class Menu extends Component {
     let menuChildren = [childOfChildFound];
 
     if (menuItem.children) {
-      menuChildren = menuItem.children.map((ch: any) => {
-        if (ch.children) {
+      menuChildren = menuItem.children.map((subMenu: any) => {
+        if (subMenu.children) {
           return (
-            <MenuItem name={ch.name} key={ch.name}>
-              {ch.children.map((child: any) => {
+            <MenuItem name={subMenu.name} key={subMenu.name}>
+              {subMenu.children.map((child: any) => {
                 return this.findChildren(child);
               })}
             </MenuItem>
           );
         } else {
-          return <MenuSubItem name={ch.name} key={ch.name} />;
+          return <MenuSubItem name={subMenu.name} key={subMenu.name} />;
         }
       });
       return (

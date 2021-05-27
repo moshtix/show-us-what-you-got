@@ -25,6 +25,19 @@
   color: #61dafb;
 }
 
+ul {
+  color: cadetblue;
+  list-style-type: none;
+}
+
+ul > * {
+  color: pink;
+}
+
+ul li {
+  color: lightyellow;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
