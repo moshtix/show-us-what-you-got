@@ -1,12 +1,10 @@
 import styled from "styled-components";
 
 export const MenuContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-
- 
+  display: flex;
+  justify-content: space-evenly;
+  background-color: #2f76cc;
   text-align: center;
-  
 `;
 
 export const DropBtn = styled.div`
@@ -16,7 +14,7 @@ export const DropBtn = styled.div`
   font-size: 16px;
   border: none;
   cursor: pointer;
-
+  font-size: 1.5rem;
 `;
 
 export const DropdownContent = styled.div`
@@ -38,14 +36,11 @@ export const DropdownContent = styled.div`
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
   width: 100%;
+
+  display: ${(props) => (props.toggle ? "block" : "none")};
 `;
 
 export const Dropdown = styled.div`
   position: relative;
   display: inline-block;
-  
-
-  :hover ${DropdownContent} {
-    display: block;
-  }
 `;

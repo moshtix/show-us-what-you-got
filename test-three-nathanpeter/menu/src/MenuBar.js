@@ -1,36 +1,27 @@
 import React from "react";
 
-import {
-  MenuContainer,
-  DropBtn,
-  DropdownContent,
-  Dropdown,
-} from "./MenuBarStyles";
 
-import menu from "./data/menudata";
+import AccountButton from './components/AccountButton'
+import ContentButton from './components/ContentButton'
+import DesignButton from './components/DesignButton'
+import ReportingButton from './components/ReportingButton'
+
+import {MenuContainer} from './MenuBarStyles'
 
 const MenuBar = () => {
-  return (
+
+return (
+
     <MenuContainer>
-      {menu.children.map((outerMap, i) => (
-        <Dropdown>
-          <DropBtn key={i}>
-            <h2>{outerMap.name}</h2>
-          </DropBtn>
-          <DropdownContent>
-            {outerMap.name === "Account" &&
-              outerMap.firstchild.map((innerMap, i) => <li key={i}>{innerMap.name}</li>)}
-            {outerMap.name === "Design" &&
-              outerMap.secondchild.map((innerMap, i) => <li key={i}>{innerMap.name}</li>)}
-              {outerMap.name === "Content" &&
-              outerMap.thirdchild.map((innerMap, i) => <li key={i}>{innerMap.name}</li>)}
-              {outerMap.name === "Reporting" &&
-              outerMap.fourthchild.map((innerMap, i) => <li key={i}>{innerMap.name}</li>)}
-          </DropdownContent>
-        </Dropdown>
-      ))}
+    <AccountButton/>
+    <ContentButton/>
+    <DesignButton/>
+    <ReportingButton/>
+
+
     </MenuContainer>
-  );
+
+)
 };
 
 export default MenuBar;

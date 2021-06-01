@@ -2,6 +2,7 @@ export const menu = {
     "name": "menu",
     "children": [
       {
+        "id" : 1,
         "name": "Account",
         "firstchild": [
           {
@@ -16,6 +17,7 @@ export const menu = {
         ]
       },
       {
+        "id" : 2,
         "name": "Design",
         "secondchild": [
           {
@@ -30,6 +32,7 @@ export const menu = {
         ]
       },
       {
+        "id" : 3,
         "name": "Content",
         "thirdchild": [
           {
@@ -44,6 +47,7 @@ export const menu = {
         ]
       },
       {
+        "id" : 4,
         "name": "Reporting",
         "fourthchild": [
           {
