@@ -62,7 +62,7 @@ export default function SideMenu({MenuItems}) {
             <img className="Logo" src={Logo} alt="MoshtixLogo" />
           </ListSubheader>
         } 
-        >
+      >
         <div className="userContainer">
           <PersonOutlineOutlinedIcon className="userIcon"/><div className="userName">Zenon M.</div>
         </div>
@@ -83,11 +83,11 @@ export default function SideMenu({MenuItems}) {
 
         {MenuItems.children.map(({ name, children: subItems}) => (
           <React.Fragment key={name}>
-              {Array.isArray(subItems) ? (
-                <CollapsableMenuItem name={name} subItems={subItems} />    
-              ) :  
-                <SimpleMenuItem name={name} />
-              }
+            {Array.isArray(subItems) ? (
+              <CollapsableMenuItem name={name} subItems={subItems} />    
+            ) :  
+              <SimpleMenuItem name={name} />
+            }
           </React.Fragment>
         ))} 
       </List>
