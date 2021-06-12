@@ -16,5 +16,4 @@ Libraries:
 * npm install @material-ui/core
 * npm install @material-ui/icon
 
-![alt text](https://github.com/sunreetsingh6131/show-us-what-you-got/test-three/blob/sunreet_test/screenshot.jpg?raw=true)
-
+![alt text](https://github.com/sunreetsingh6131/show-us-what-you-got/blob/sunreet_test/test-three/screenshot.jpg?raw=true)
