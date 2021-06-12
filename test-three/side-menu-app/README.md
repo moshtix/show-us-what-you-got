@@ -13,5 +13,5 @@ Framework used: [Material UI](https://material-ui.com)
 ## Installation (using NPM package manager)
 
 Libraries:
-npm install @material-ui/core
-npm install @material-ui/icon
+..* npm install @material-ui/core
+..* npm install @material-ui/icon
