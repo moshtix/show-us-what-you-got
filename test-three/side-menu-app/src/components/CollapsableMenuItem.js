@@ -1,5 +1,4 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -8,17 +7,14 @@ import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 //icons (material ui)
-import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined';
-import AssessmentOutlinedIcon from '@material-ui/icons/AssessmentOutlined';
-import BrushOutlinedIcon from '@material-ui/icons/BrushOutlined';
-import TocOutlinedIcon from '@material-ui/icons/TocOutlined';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 
+import IconsHandler from './IconsHandler'
 import '../styles/style.css';
 
 
 
-export default function CollapsableMenuItem({ name, subItems }) {
+export default function CollapsableMenuItem({ name, subItems, icon }) {
 
   // state to collapse/open the submenu
 	const [open, setOpen] = React.useState(true);
@@ -36,12 +32,7 @@ export default function CollapsableMenuItem({ name, subItems }) {
   return (
   	<>
       <ListItem button className="subOptionsButton" onClick={handleClick}>
-        <ListItemIcon>
-					{name === "Account" && <SettingsOutlinedIcon className="leftIcon" />}
-					{name === "Content" && <TocOutlinedIcon className="leftIcon" />}
-					{name === "Reporting" && <AssessmentOutlinedIcon  className="leftIcon" />}
-					{name === "Design" && <BrushOutlinedIcon  className="leftIcon" />}
-        </ListItemIcon>
+        <IconsHandler name={name}/>
         <ListItemText disableTypography className="mainOptionText">{name}</ListItemText>
         { open ? <ExpandMore /> : <ExpandLess />}
       </ListItem>

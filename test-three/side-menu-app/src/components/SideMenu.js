@@ -3,13 +3,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import List from '@material-ui/core/List';
 import Logo from '../images/Logo.png';
-import SearchBar from "material-ui-search-bar";
 import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
 // icons (material ui)
 import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
-import DirectionsIcon from '@material-ui/icons/Directions';
 import HelpOutlineOutlinedIcon from '@material-ui/icons/HelpOutlineOutlined';
 import PersonOutlineOutlinedIcon from '@material-ui/icons/PersonOutlineOutlined';
 // components
@@ -84,9 +82,9 @@ export default function SideMenu({MenuItems}) {
         {MenuItems.children.map(({ name, children: subItems}) => (
           <React.Fragment key={name}>
               {Array.isArray(subItems) ? (
-                <CollapsableMenuItem name={name} subItems={subItems} />    
+                <CollapsableMenuItem name={name} subItems={subItems}/>    
               ) :  
-                <SimpleMenuItem name={name} />
+                <SimpleMenuItem name={name}/>
               }
           </React.Fragment>
         ))} 

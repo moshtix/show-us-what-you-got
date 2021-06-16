@@ -1,7 +1,7 @@
 import * as React from 'react';
 import './App.css';
 import SideMenu from './components/SideMenu';
-import MenuData from '../../menu-data.json';
+import MenuData from './menu-data.json';
 
 function App() {
   return (
