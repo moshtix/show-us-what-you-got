@@ -17,7 +17,7 @@ import '../styles/style.css';
 export default function CollapsableMenuItem({ name, subItems, icon }) {
 
   // state to collapse/open the submenu
-	const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(true);
   const handleClick = () => {
     setOpen(!open);
   };
@@ -30,7 +30,7 @@ export default function CollapsableMenuItem({ name, subItems, icon }) {
 
 
   return (
-  	<>
+    <>
       <ListItem button className="subOptionsButton" onClick={handleClick}>
         <IconsHandler name={name}/>
         <ListItemText disableTypography className="mainOptionText">{name}</ListItemText>
@@ -48,7 +48,7 @@ export default function CollapsableMenuItem({ name, subItems, icon }) {
           ))}
         </List>
       </Collapse>
-  	</>
+    </>
   );
 }
 
