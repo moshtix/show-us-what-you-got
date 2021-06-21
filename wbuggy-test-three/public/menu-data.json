@@ -1,0 +1,61 @@
+{
+  "name": "menu",
+  "children": [
+    {
+      "name": "Account",
+      "children": [
+        {
+          "name": "Preferences"
+        },
+        {
+          "name": "Contact Details"
+        },
+        {
+          "name": "Manage Users"
+        }
+      ]
+    },
+    {
+      "name": "Design",
+      "children": [
+        {
+          "name": "Themes"
+        },
+        {
+          "name": "Gallery"
+        },
+        {
+          "name": "Templates"
+        }
+      ]
+    },
+    {
+      "name": "Content",
+      "children": [
+        {
+          "name": "Pages"
+        },
+        {
+          "name": "Links"
+        },
+        {
+          "name": "Widgets"
+        }
+      ]
+    },
+    {
+      "name": "Reporting",
+      "children": [
+        {
+          "name": "Dashboard"
+        },
+        {
+          "name": "Reports"
+        },
+        {
+          "name": "Scheduling"
+        }
+      ]
+    }
+  ]
+}
