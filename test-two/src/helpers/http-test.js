@@ -1,12 +1,17 @@
 import { get, post, joinPaginatedRequests } from "./http";
-import fetch from 'node-fetch'
+import * as fetch from 'node-fetch'
+
 jest.mock('node-fetch', () => jest.fn())
+
+beforeEach(() => {
+  fetch.mockReset();
+});
 
 describe("get fn", () => {
   test("returned request without error", async () => {
     const message = { one: "one" };
   
-    fetch.mockImplementation(() => Promise.resolve({
+    fetch.mockImplementationOnce(() => Promise.resolve({
       status: 200,
       json: () => Promise.resolve(message)
     }));
@@ -21,7 +26,7 @@ describe("get fn", () => {
   test("failed on error", async () => {
     const message = { Message: "error" };
   
-    fetch.mockImplementation(() => Promise.resolve({
+    fetch.mockImplementationOnce(() => Promise.resolve({
       status: 500,
       json: () => message
     }));
@@ -38,7 +43,7 @@ describe("post fn", () => {
   test("returned request without error", async () => {
     const message = { one: "one" };
   
-    fetch.mockImplementation(() => Promise.resolve({
+    fetch.mockImplementationOnce(() => Promise.resolve({
       status: 200,
       json: () => Promise.resolve(message)
     }));
@@ -53,7 +58,7 @@ describe("post fn", () => {
   test("failed on error", async () => {
     const message = { Message: "error" };
   
-    fetch.mockImplementation(() => Promise.resolve({
+    fetch.mockImplementationOnce(() => Promise.resolve({
       status: 500,
       json: () => message
     }));

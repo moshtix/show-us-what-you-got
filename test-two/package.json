@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "babel src/ -d lib -s",
-    "test": "jest --coverage --watch --detectOpenHandles",
+    "test": "jest --coverage",
     "go": "node lib/index",
     "start": "nodemon -x \"npm run build && npm run test && npm run go\""
   },

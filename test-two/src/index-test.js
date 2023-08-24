@@ -10,6 +10,11 @@ jest.mock("./services/github", () => ({
   getUsersForOrganisation: jest.fn(),
 }));
 
+beforeEach(() => {
+  gitHubService.getUsersForOrganisation.mockReset();
+  logger.log.mockReset();
+});
+
 test("go logged users from github service", async () => {
   const expectedOutput = `Username: a\nUsername: b\nUsername: c\n`;
 
