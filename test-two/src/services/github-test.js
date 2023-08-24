@@ -118,7 +118,7 @@ const getRandomTotalOfUsersResponse = async () => Promise.resolve({
     organization: {
       membersWithRole: {
         // just so we can have a nice integer
-        totalCount: Math.floor(Math.random() * 100)
+        totalCount: Math.floor(Math.random() * 100 + 1)
       }
     }
   }

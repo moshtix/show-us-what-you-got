@@ -10,20 +10,20 @@ export const request = async (url, requestInit = {}) => {
   if (response.status === 200) {
     return json;
   } else {
-    console.error(`There was an error while making a request: ${json.message || json.Message || json}`)
-    throw Error(json.Message);
+    const error = json.message || json.Message || json;
+    throw Error(error);
   }
 }
 
 export const get = async (url, requestInit = {}) => {
-  return request(url, {
+  return await request(url, {
     ...requestInit,
     method: "GET"
   });
 };
 
 export const post = async (url, requestInit = {}) => {
-  return request(url, {
+  return await request(url, {
     ...requestInit,
     method: "POST"
   });
