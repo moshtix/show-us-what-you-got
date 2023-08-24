@@ -1,3 +1,3 @@
-export const log = async message => {
+export const log = (message) => {
   console.log(message);
 };

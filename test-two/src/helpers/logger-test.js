@@ -7,7 +7,7 @@ test("logged message", async () => {
     .spyOn(global.console, "log")
     .mockImplementation(() => {});
 
-  await log(message);
+  log(message);
 
   expect(consoleLogSpy.mock.calls[0][0]).toEqual(message);
 
