@@ -1,11 +1,13 @@
 {
-  "presets": ["env", "stage-0"],
+  "presets": [
+    "@babel/preset-env"
+  ],
   "ignore": [],
   "plugins": [
-    [
-      "transform-runtime",
+    "@babel/plugin-proposal-function-bind",
+    [      
+      "@babel/transform-runtime",
       {
-        "polyfill": false,
         "regenerator": true
       }
     ]
