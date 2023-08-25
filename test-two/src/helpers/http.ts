@@ -1,6 +1,6 @@
 import fetch from "node-fetch";
 
-type PossibleErrors = { Message: string } | { message: string } | any;
+type PossibleErrors = { Message: string };
 
 export const request = async <T>(url: string, requestInit = {}) => {
   const response = await fetch(url, {
@@ -13,7 +13,7 @@ export const request = async <T>(url: string, requestInit = {}) => {
     return json as T;
   } else {
     const error = json as PossibleErrors;
-    throw Error(error.message || error.Message || json);
+    throw Error(error.Message ?? error);
   }
 }
 
@@ -38,7 +38,7 @@ export const joinPaginatedRequests = async <T>(
   pageSize: number,
   getter: RequestFactoryFn<T>,
 ): Promise<T[]> => {
-  let maxPages = Math.ceil(total / pageSize);
+  const maxPages = Math.ceil(total / pageSize);
   const requests = [];
 
   for (let index = 0; index < maxPages; index++) {

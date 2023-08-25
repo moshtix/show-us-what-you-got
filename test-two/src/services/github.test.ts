@@ -81,7 +81,7 @@ test("appended authentication token to URL", async () => {
   await httpGetfn.apply();
 
   // 4 - get from the mock invokation, the headers
-  const [_, { headers }] = mockHttp.get.mock.calls[0]
+  const [, { headers }] = mockHttp.get.mock.calls[0]
 
   expect(headers['Authorization']).toEqual(expect.stringContaining(authToken));
 });
