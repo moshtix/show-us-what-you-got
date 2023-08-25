@@ -3,15 +3,17 @@ import * as fetch from 'node-fetch'
 
 jest.mock('node-fetch', () => jest.fn())
 
+const mockFetch = fetch as unknown as jest.Mock;
+
 beforeEach(() => {
-  fetch.mockReset();
+  mockFetch.mockReset();
 });
 
 describe("get fn", () => {
   test("returned request without error", async () => {
     const message = { one: "one" };
   
-    fetch.mockImplementationOnce(() => Promise.resolve({
+    mockFetch.mockImplementationOnce(() => Promise.resolve({
       status: 200,
       json: () => Promise.resolve(message)
     }));
@@ -26,7 +28,7 @@ describe("get fn", () => {
   test("failed on error", async () => {
     const message = { Message: "error" };
   
-    fetch.mockImplementationOnce(() => Promise.resolve({
+    mockFetch.mockImplementationOnce(() => Promise.resolve({
       status: 500,
       json: () => message
     }));
@@ -43,7 +45,7 @@ describe("post fn", () => {
   test("returned request without error", async () => {
     const message = { one: "one" };
   
-    fetch.mockImplementationOnce(() => Promise.resolve({
+    mockFetch.mockImplementationOnce(() => Promise.resolve({
       status: 200,
       json: () => Promise.resolve(message)
     }));
@@ -58,7 +60,7 @@ describe("post fn", () => {
   test("failed on error", async () => {
     const message = { Message: "error" };
   
-    fetch.mockImplementationOnce(() => Promise.resolve({
+    mockFetch.mockImplementationOnce(() => Promise.resolve({
       status: 500,
       json: () => message
     }));

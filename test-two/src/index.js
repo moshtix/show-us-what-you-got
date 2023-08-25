@@ -1,6 +1,11 @@
 import { log } from "./helpers/logger";
 import { getUsersForOrganisation } from "./services/github";
 
+/**
+ * This file was left as JS intentionally, to show the interoperability 
+ * ts -js and vice-versa, which is a common scenario during a migration
+ */
+
 const baseUrl = "https://api.github.com/";
 const organisationId = "google";
 // I have a token, i can provide if you want

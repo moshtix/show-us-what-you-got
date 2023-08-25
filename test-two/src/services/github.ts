@@ -2,14 +2,14 @@ import { get, joinPaginatedRequests, post } from "../helpers/http";
 
 const PAGE_SIZE = 100;
 
-const getAuthHeader = apiToken => ({
+const getAuthHeader = (apiToken: string) => ({
   Authorization: `Bearer ${apiToken}`,
 });
 
 export const getUsersForOrganisation = async (
-  baseUrl,
-  apiToken,
-  orgId
+  baseUrl: string,
+  apiToken: string,
+  orgId: string
 ) => {
   const totalUsers =
     await getTotalUsers(apiToken, orgId);
@@ -30,14 +30,14 @@ export const getUsersForOrganisation = async (
 };
 
 const getTotalUsers = async (
-  apiAuthenticationToken,
-  organisationId
+  apiToken: string,
+  organisationId: string
 ) => {
   
-    const response = await post('https://api.github.com/graphql', {
+    const response = await post<CountResponse>('https://api.github.com/graphql', {
       headers: {
         'Content-Type': 'application/json',
-        ...getAuthHeader(apiAuthenticationToken),
+        ...getAuthHeader(apiToken),
       },
       body: JSON.stringify({
         query: `query {
@@ -50,15 +50,19 @@ const getTotalUsers = async (
       `})
     });  
     
-    if(
-      response
-      && response.data
-      && response.data.organization
-      && response.data.organization.membersWithRole
-      && response.data.organization.membersWithRole.totalCount
-    ) {
+    if(response?.data?.organization?.membersWithRole?.totalCount) {
       return response.data.organization.membersWithRole.totalCount;
     }
 
     throw new Error(`Could not find total of members in ${organisationId}`);
+}
+
+type CountResponse = {
+  data: {
+    organization: {
+      membersWithRole: {        
+        totalCount: number
+      }
+    }
+  }
 }

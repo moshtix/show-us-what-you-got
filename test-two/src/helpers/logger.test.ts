@@ -9,7 +9,13 @@ test("logged message", async () => {
 
   log(message);
 
-  expect(consoleLogSpy.mock.calls[0][0]).toEqual(message);
+  const [firstCall] = consoleLogSpy.mock.calls;
+
+  if(!firstCall?.length) {
+    fail("console.log was not called!");
+  }
+
+  expect(firstCall[0]).toEqual(message);
 
   consoleLogSpy.mockRestore();
 });
