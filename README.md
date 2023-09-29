@@ -118,4 +118,4 @@ This is a CSS challenge. Open the index.html file in a browser. Edit only the `m
 
 ## Test Five
 
-Create an AWS CDK Typescript project that deploy's a 'create react app' to AWS prioritising scalability and resilience.
+Create an AWS CDK Typescript project that deploys a 'create react app' (https://create-react-app.dev/docs/getting-started/) to AWS considering scalability, resilience, and cost.
