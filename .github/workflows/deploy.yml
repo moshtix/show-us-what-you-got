@@ -3,13 +3,40 @@ name: Build, Test, and Deploy to AWS S3
 on:
   push:
     branches:
-      - master
+      - master  
     paths:
-      - 'test-five/moshtix-app/**'
+      - 'test-five/moshtix-app/**'  # Only trigger when this directory has changes
+
+  workflow_dispatch:  # Manual trigger
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: test-five/moshtix-app
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Tests
+        run: npm test -- --watchAll=false
+
+  build_and_deploy:
+    needs: test  # Ensure the 'build and deploy' job waits for 'test' to complete
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: test-five/moshtix-app
 
     steps:
       - name: Checkout code
@@ -26,49 +53,11 @@ jobs:
       - name: Build React App
         run: npm run build
 
-      - name: Archive build artifacts
-        uses: actions/upload-artifact
-        with:
-          name: build
-          path: test-five/moshtix-app/build
-
-  test:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: 14
-
-      - name: Install dependencies for tests
-        run: npm install
-
-      - name: Run Tests
-        run: npm test -- --watchAll=false
-
-  deploy:
-    needs: test
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Download build artifacts
-        uses: actions/download-artifact
-        with:
-          name: build
-
       - name: Set up AWS CLI
         run: |
           aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws configure set region ap-southeast-2
+          aws configure set region ap-southeast-2  
 
       - name: Deploy to S3
         run: |
