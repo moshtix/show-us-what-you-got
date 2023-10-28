@@ -1,25 +1,46 @@
 import { log } from "./helpers/logger";
 import { getUsersForOrganisation } from "./services/github";
 
+/**
+ * This file was left as JS intentionally, to show the interoperability 
+ * ts -js and vice-versa, which is a common scenario during a migration
+ */
+
 const baseUrl = "https://api.github.com/";
 const organisationId = "google";
-const gitHubApiAuthToken = ""; // add your GitHub API OAuth key here to increase request limit
+// I have a token, i can provide if you want
+const gitHubApiAuthToken = "";
 
-export const go = async () => {
+const writeUpUsers = (users) => {
+  return users.reduce((result, user) => {
+    return `${result}Username: ${user.login}\n`;
+  }, "");
+}
+
+export const go =  async () => {
+  const appName = `"${organisationId}" GitHub Organization members fetching system`;
   try {
-    const users = await getUsersForOrganisation(
+    log(`Welcome to the ${appName}!`);
+
+    const fetchingUsers = getUsersForOrganisation(
       baseUrl,
       gitHubApiAuthToken,
       organisationId
     );
 
-    const output = users.reduce((result, user) => {
-      return `${result}Username: ${user.login}\n`;
-    }, "");
+    log(`Fetching all members from "${organisationId}"...`);
+    
+    const users = await fetchingUsers;
 
+    log(`We found ${users.length} members under "${organisationId}"`);
+
+    const output = writeUpUsers(users);
+    
     log(output);
+
+    log(`Thank you so much for using the ${appName}`);
   } catch (error) {
-    await log(error.message);
+    log(error.message);
   }
 };
 

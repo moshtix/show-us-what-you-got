@@ -1,0 +1,39 @@
+{
+    "compilerOptions": {
+        "allowSyntheticDefaultImports": true,
+        // project options
+        "lib": [
+            "ESNext",
+            "dom"
+        ],
+        "outDir": "lib",
+        "removeComments": true,
+        "target": "ES6",
+        
+        "baseUrl": "./",
+        "esModuleInterop": true,
+        "moduleResolution": "node",
+        "paths": {},
+        
+        "sourceMap": true,
+        "sourceRoot": "/",
+        "allowJs": true,
+        "alwaysStrict": true,
+        "allowUnreachableCode": false,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        
+        "noImplicitReturns": true,
+        "noUncheckedIndexedAccess": true, 
+        "noUnusedLocals": true,
+        "noUnusedParameters": true
+    },
+    "include": [
+        "./**/*.ts",
+        "./**/*.js",
+        "**/*.test.ts"
+    ],
+    "exclude": [
+        "node_modules/**/*"
+    ]
+}
