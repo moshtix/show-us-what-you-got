@@ -56,9 +56,9 @@ jobs:
   deploy:
     needs: test  # Ensure the 'deploy' job waits for 'test' to complete
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: test-five/moshtix-app
+    #defaults:
+      #run:
+        #working-directory: test-five/moshtix-app
 
     steps:
       - name: Set up AWS CLI
