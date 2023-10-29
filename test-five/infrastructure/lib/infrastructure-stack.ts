@@ -10,7 +10,7 @@ export class InfrastructureStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    // Setting the domain name by 
+    // Setting the domain name  
     const domainName = 'selemon-code.com';
     const siteDomain = 'www' + '.' + domainName;
 
@@ -18,11 +18,13 @@ export class InfrastructureStack extends cdk.Stack {
     const bucket = new s3.Bucket(this, 'WebsiteBucket', {
       bucketName: 'moshtix-app',
       websiteIndexDocument: 'index.html',
+      publicReadAccess: false
     });
 
     // Find the current hosted zone in Route 53
-    const zone = route53.HostedZone.fromLookup(this, 'Zone', { domainName: domainName });
-    console.log(zone);
+    const zone = route53.HostedZone.fromLookup(this, 'Zone', { 
+      domainName: domainName 
+    });
 
     // Create a DNS-validated SSL certificate for the domain
     const certificate = new certificateManager.DnsValidatedCertificate(this, 'Certificate', {
