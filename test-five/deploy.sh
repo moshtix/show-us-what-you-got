@@ -11,7 +11,7 @@ printf "\n"
 
 npm run build
 
-cd ../infra
+cd ../infrastructure
 
 printf "\n"
 echo "--- Deploying infrastructure..."
