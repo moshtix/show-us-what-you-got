@@ -37,6 +37,7 @@ export class TestFiveStack extends cdk.Stack {
      * 👉 Stack Definition:
      */
 
+    // Create an S3 bucket for the React app.
     const reactAppBucket = new s3.Bucket(this, "ReactAppBucket", {
       bucketName: `moshtix-fronted-${envParameter.valueAsString}`,
       publicReadAccess: false,
@@ -52,13 +53,16 @@ export class TestFiveStack extends cdk.Stack {
       // } as s3.BlockPublicAccess
     });
 
+    // Create an Origin Access Identity (OAI) for CloudFront.
     const cloudFrontOAI = new cloudfront.OriginAccessIdentity(this, 'OAI');
     reactAppBucket.grantRead(cloudFrontOAI.grantPrincipal);
 
+    // Look up the hosted zone in Route 53 using the provided domain name.
     const zone = route53.HostedZone.fromLookup(this, 'HostedZone', {
       domainName: DOMAIN_NAME
     });
 
+    // Create a DNS-validated certificate for the domain.
     const siteCertificate = new acm.DnsValidatedCertificate(this, 'Certificate', {
       domainName: DOMAIN_NAME,
       subjectAlternativeNames: ['*.' + DOMAIN_NAME],
@@ -67,6 +71,7 @@ export class TestFiveStack extends cdk.Stack {
       region: 'us-east-1'
     });
 
+    // Create a CloudFront distribution for the React app.
     const cloudFrontWebDistribution = new cloudfront.CloudFrontWebDistribution(this, "CDKCRAStaticDistribution", {
       originConfigs: [
         {
@@ -83,11 +88,13 @@ export class TestFiveStack extends cdk.Stack {
       })
     });
 
+    // Create an alias record in Route 53 that points to the CloudFront distribution.
     new route53.ARecord(this, 'Alias', {
       zone: zone,
       target: route53.RecordTarget.fromAlias(new targets.CloudFrontTarget(cloudFrontWebDistribution))
     });
 
+    // Deploy the React app to the S3 bucket.
     new s3Deploy.BucketDeployment(this, "DeployCRA", {
       sources: [s3Deploy.Source.asset(__dirname + "/../../frontend/build")],
       destinationBucket: reactAppBucket,
@@ -96,7 +103,7 @@ export class TestFiveStack extends cdk.Stack {
     });
 
     /**
-     * Output
+     * 👉 Output
      */
 
     new CfnOutput(this, "reactAppBucketName", {
