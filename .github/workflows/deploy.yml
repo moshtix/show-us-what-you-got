@@ -1,0 +1,83 @@
+name: Test, Build, and Deploy - CI/CD
+
+on:
+  # pull_request:
+  push:
+    branches:
+      - main
+    paths:
+      - './test-five/infra/**'
+      - './test-five/frontend/**'
+
+env:
+  AWS_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+
+jobs:
+  # test-frontend:
+  #   runs-on: ubuntu-latest
+  #   defaults:
+  #     run:
+  #       working-directory: ./test-five/frontend
+
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
+
+  # test-infrastructure:
+  #   runs-on: ubuntu-latest
+  #   defaults:
+  #     run:
+  #       working-directory: ./test-five/frontend
+
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
+
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./test-five
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - run: |
+          npm install -g aws-cdk
+          npm install -g ts-node
+          npm install -g --unsafe-perm=true esbuild
+
+      - name: Frontend Build
+        run: |
+          cd frontend
+          npm ci
+          npm run build
+          cd ..
+
+      - name: Install CDK and Dependencies
+        run: |
+          cd infra
+          npm install
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@master
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          AWS-REGION: ${{ env.AWS_REGION }}
+
+      - name: Deploy to production AWS
+        run: |
+          cd infra
+          cdk deploy TestFiveStack --parameters Environment=production --require-approval never --progress=events --no-cli-pager
+        env:
+          STACK_ENVIRONMENT: production
+          CDK_DEFAULT_ACCOUNT: ${{ secrets.CDK_DEFAULT_ACCOUNT_PROD }}
+          CDK_DEFAULT_REGION: ${{ env.AWS_REGION }}
+          DOMAIN_NAME: "pablo-magro-gaspar.site"
