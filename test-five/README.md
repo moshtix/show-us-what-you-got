@@ -1,6 +1,6 @@
 # AWS Services and Architecture Design.
 
-The following AWS services and architecture can be used to deploy a React application to AWS using TypeScript and CDK, considering scalability, resilience, and cost:
+The following AWS services and architecture can be used to deploy a React application to AWS using TypeScript and CDK, considering scalability, resilience, and cost-effective:
 
 ## Scalability:
 
@@ -34,6 +34,22 @@ The cost of the proposed solution will vary depending on the amount of data that
 
 Compared to other solutions, such as hosting the React app on a traditional web server, the proposed solution is generally more cost-effective, especially for high-traffic websites. This is because CloudFront is designed to efficiently distribute content to users around the world, which can reduce bandwidth costs. Additionally, the free tier of CloudFront can be used to host low-traffic websites at no cost.
 
-## Conclusion
+## Deployment Result
 
-The proposed solution is a scalable, resilient, and cost-effective way to deploy a Create React App to AWS using TypeScript and CDK.
+- React Application hosted on AWS
+
+![React App](./images/React-App.png)
+
+- Cloud Formation Distribution
+
+![AWS CloudFront Distribution](./images/AWS-CloudFront-Distribution.png)
+
+- Route53 Hosted Zone
+
+![AWS Route53 Hosted Zone](./images/AWS-Route53-Hosted-Zone.png)
+
+
+
+
+
+
