@@ -2,6 +2,7 @@
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
 import { ReactAppCdkStack } from '../lib/react-app-cdk-stack';
+import * as path from 'path';
 
 const app = new cdk.App();
 new ReactAppCdkStack(app, 'ReactAppCdkStack', {
@@ -21,5 +22,8 @@ new ReactAppCdkStack(app, 'ReactAppCdkStack', {
   env: {
     region: 'ap-southeast-2', // using Sydney region
     account: process.env.CDK_DEFAULT_ACCOUNT // changing account to env var
-  }
+  },
+  stage: process.env.STAGE!,
+  path: path.join(__dirname, '..', 'my-app/build'),
+
 });
