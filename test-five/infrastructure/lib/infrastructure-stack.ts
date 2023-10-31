@@ -6,6 +6,10 @@ import {
   aws_s3_deployment as s3Deploy,
   aws_route53 as route53,
   aws_route53_targets as targets,
+  aws_cloudwatch as cloudwatch,
+  aws_cloudwatch_actions as cw_actions,
+  aws_sns as sns,
+  aws_sns_subscriptions as subscriptions,
   CfnOutput,
   CfnParameter,
   RemovalPolicy
@@ -31,6 +35,11 @@ export class TestFiveStack extends cdk.Stack {
       type: "String",
       description: "The app environment, e.g. prod",
       default: "local"
+    });
+
+    const snsRecipientParameter = new CfnParameter(this, "SnsRecipient", {
+      type: "String",
+      description: "Email recipient for alarm sns",
     });
 
     /**
@@ -101,6 +110,58 @@ export class TestFiveStack extends cdk.Stack {
       distribution: cloudFrontWebDistribution,
       distributionPaths: ['/*'],
     });
+
+    /**
+     * 👉 Alarms.
+     */
+
+    // Create an SNS Topic and a subscription.
+    const snsTopic = new sns.Topic(this, 'SNSTopic');
+    snsTopic.addSubscription(
+      new subscriptions.EmailSubscription(`${snsRecipientParameter.valueAsString}`)
+    );
+
+    // Sets up an alarm that triggers if there are more than 100 errors in a 5-minute period for two consecutive periods.
+    const s3BucketSizeAlarm = new cloudwatch.Alarm(this, 'HighErrorRate', {
+      metric: new cloudwatch.Metric({
+        metricName: 'NumberOfErrors',
+        namespace: 'AWS/S3',
+        dimensionsMap: {
+          BucketName: reactAppBucket.bucketName,
+        },
+        statistic: 'SampleCount',
+        period: cdk.Duration.minutes(5),
+      }),
+      threshold: 100,
+      evaluationPeriods: 2,
+      datapointsToAlarm: 2,
+      comparisonOperator: cloudwatch.ComparisonOperator.GREATER_THAN_THRESHOLD,
+      alarmDescription: 'S3 bucket number of errors.'
+    });
+
+    // Add an SNS action to the S3 bucket size alarm
+    s3BucketSizeAlarm.addAlarmAction(new cw_actions.SnsAction(snsTopic));
+
+    // Alarm that triggers if the average 4xx error rate exceeds 1% in a 5-minute period for two consecutive periods.
+    const cloudWatch4xxErrorAlarm = new cloudwatch.Alarm(this, 'HighCloudFront4xxErrorRate', {
+      metric: new cloudwatch.Metric({
+        metricName: '4xxErrorRate',
+        namespace: 'AWS/CloudFront',
+        dimensionsMap: {
+          DistributionId: cloudFrontWebDistribution.distributionId,
+        },
+        statistic: 'Average',
+        period: cdk.Duration.minutes(5),
+      }),
+      threshold: 1,
+      evaluationPeriods: 2,
+      datapointsToAlarm: 2,
+      comparisonOperator: cloudwatch.ComparisonOperator.GREATER_THAN_THRESHOLD,
+      alarmDescription: 'High 4xx error rate on CloudFront distribution.'
+    });
+
+    // Add an SNS action to the CloudFront 4xx error rate alarm.
+    cloudWatch4xxErrorAlarm.addAlarmAction(new cw_actions.SnsAction(snsTopic));
 
     /**
      * 👉 Output
