@@ -112,7 +112,7 @@ export class TestFiveStack extends cdk.Stack {
     });
 
     /**
-     * 👉 Alarms.
+     * 👉 Alarms and Monitoring.
      */
 
     // Create an SNS Topic and a subscription.
@@ -162,6 +162,20 @@ export class TestFiveStack extends cdk.Stack {
 
     // Add an SNS action to the CloudFront 4xx error rate alarm.
     cloudWatch4xxErrorAlarm.addAlarmAction(new cw_actions.SnsAction(snsTopic));
+
+    // Create a Dashboard for Monitoring and Managing Alarms
+    const dashboard = new cloudwatch.Dashboard(this, "Test Five Dashboard", {
+      dashboardName: "test-five-infrastructure-dashboard",
+    });
+    dashboard.addWidgets(
+      new cloudwatch.AlarmWidget({ title: "High Error Rate", alarm: s3BucketSizeAlarm })
+    );
+    dashboard.addWidgets(
+      new cloudwatch.AlarmWidget({
+        title: "High Cloud Front 4xx Error Rate",
+        alarm: cloudWatch4xxErrorAlarm
+      })
+    );
 
     /**
      * 👉 Output
