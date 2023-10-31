@@ -20,6 +20,8 @@ printf "\n"
 DOMAIN_NAME="" \
 CDK_DEFAULT_ACCOUNT= \
 CDK_DEFAULT_REGION="" \
-cdk deploy TestFiveStack --parameters Environment=prod --require-approval never --progress=events
+cdk deploy TestFiveStack \
+  --parameters Environment=<environment> --parameters SnsRecipient=<distribution-list> \
+  --require-approval never --progress=events || die "Failed to deploy the infrastructure"
 
 exit 0
