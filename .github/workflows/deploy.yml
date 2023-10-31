@@ -1,9 +1,14 @@
 name: Test, Build, and Deploy - CI/CD
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
+    paths:
+      - 'test-five/infrastructure/**'
+      - 'test-five/frontend/**'
+  pull_request:
     paths:
       - 'test-five/infrastructure/**'
       - 'test-five/frontend/**'
@@ -55,8 +60,28 @@ jobs:
           npm ci
           npm run test
 
+  sonarqube-scan:
+    needs: [unit-test-frontend, unit-test-infrastructure]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: test-five
+
+    steps:
+      - name: Checking out
+        uses: actions/checkout@master
+        with:
+          # Disabling shallow clone is recommended for improving relevancy of reporting.
+          fetch-depth: 0
+      - name: SonarQube Scan
+        uses: kitabisa/sonarqube-action@v1.2.0
+        with:
+          host: ${{ secrets.SONARQUBE_HOST }}
+          login: ${{ secrets.SONARQUBE_TOKEN }}
+
   build-and-deploy:
     needs: [unit-test-frontend, unit-test-infrastructure]
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -95,7 +120,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           AWS-REGION: ${{ env.AWS_REGION }}
 
-      - name: Deploy to production AWS
+      - name: Deploy to ${STACK_ENVIRONMENT} AWS
         run: |
           cd infrastructure
           cdk deploy TestFiveStack --parameters Environment=production --require-approval never --progress=events --no-cli-pager
@@ -104,6 +129,8 @@ jobs:
           CDK_DEFAULT_ACCOUNT: ${{ secrets.CDK_DEFAULT_ACCOUNT_PROD }}
           CDK_DEFAULT_REGION: ${{ env.AWS_REGION }}
           DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
+
+      # DEEM: Deploy stack to pre-production/testing environment.
 
   # Once deployment is completed, it should run the E2E tests,
   # and make sure your service runs properly on AWS.
@@ -127,4 +154,4 @@ jobs:
           build: npm install --package-lock-only --ignore-scripts && npm run build
           start: npm start
           browser: chrome
-          wait-on: "http://localhost:3000"
+          wait-on: ${{ secrets.FRONTEND_BASE_URL }}
