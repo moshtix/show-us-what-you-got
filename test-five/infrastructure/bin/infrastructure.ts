@@ -3,8 +3,6 @@ import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
 import { TestFiveStack } from '../lib/infrastructure-stack';
 
-console.log( process.env.CDK_DEFAULT_ACCOUNT, process.env.CDK_DEFAULT_REGION , process.env.DOMAIN_NAME);
-
 const app = new cdk.App();
 new TestFiveStack(app, 'TestFiveStack', {
   /* If you don't specify 'env', this stack will be environment-agnostic.
