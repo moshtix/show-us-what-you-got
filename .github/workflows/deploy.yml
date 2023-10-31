@@ -6,7 +6,7 @@ on:
     branches:
       - master
     paths:
-      - 'test-five/infra/**'
+      - 'test-five/infrastructure/**'
       - 'test-five/frontend/**'
 
 env:
@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: test-five/infra
+        working-directory: test-five/infrastructure
 
     steps:
       - name: Checkout code
