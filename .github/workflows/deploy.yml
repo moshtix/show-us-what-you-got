@@ -1,7 +1,6 @@
 name: Test, Build, and Deploy - CI/CD
 
 on:
-  # pull_request
   push:
     branches:
       - master
@@ -85,8 +84,9 @@ jobs:
 
       - name: Install CDK and Dependencies
         run: |
-          cd infra
+          cd infrastructure
           npm install
+          cd ..
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@master
@@ -97,10 +97,34 @@ jobs:
 
       - name: Deploy to production AWS
         run: |
-          cd infra
+          cd infrastructure
           cdk deploy TestFiveStack --parameters Environment=production --require-approval never --progress=events --no-cli-pager
         env:
           STACK_ENVIRONMENT: production
           CDK_DEFAULT_ACCOUNT: ${{ secrets.CDK_DEFAULT_ACCOUNT_PROD }}
           CDK_DEFAULT_REGION: ${{ env.AWS_REGION }}
           DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
+
+  # Once deployment is completed, it should run the E2E tests,
+  # and make sure your service runs properly on AWS.
+
+  e2e-run:
+    runs-on: ubuntu-22.04
+    needs: [build-and-deploy]
+    defaults:
+      run:
+        working-directory: test-five/frontend
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Install NPM dependencies, cache them correctly
+      # and run all Cypress tests
+      - name: Cypress run on Chrome
+        uses: cypress-io/github-action@v6
+        with:
+          build: npm install --package-lock-only --ignore-scripts && npm run build
+          start: npm start
+          browser: chrome
+          wait-on: "http://localhost:3000"
