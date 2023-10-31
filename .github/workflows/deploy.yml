@@ -1,43 +1,41 @@
 name: Test, Build, and Deploy - CI/CD
 
 on:
-  # pull_request:
+  # pull_request
   push:
     branches:
-      - main
+      - master
     paths:
-      - './test-five/infra/**'
-      - './test-five/frontend/**'
+      - 'test-five/infra/**'
+      - 'test-five/frontend/**'
 
 env:
   AWS_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
 
 jobs:
-  # test-frontend:
-  #   runs-on: ubuntu-latest
-  #   defaults:
-  #     run:
-  #       working-directory: ./test-five/frontend
-
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
-
-  # test-infrastructure:
-  #   runs-on: ubuntu-latest
-  #   defaults:
-  #     run:
-  #       working-directory: ./test-five/frontend
-
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
-
-  build-and-deploy:
+  unit-test-frontend:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./test-five
+        working-directory: test-five/frontend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Frontend Build
+        run: |
+          npm ci
+          npm run build
+      - name: Frontend Test
+        run: |
+          npm run test-cov
+
+  unit-test-infrastructure:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: test-five/infra
 
     steps:
       - name: Checkout code
@@ -52,6 +50,31 @@ jobs:
           npm install -g aws-cdk
           npm install -g ts-node
           npm install -g --unsafe-perm=true esbuild
+
+      - name: Infrastructure Test
+        run: |
+          npm ci
+          npm run test
+
+  build-and-deploy:
+    needs: [unit-test-frontend, unit-test-infrastructure]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: test-five
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - run: |
+          npm install -g aws-cdk
+          npm install -g ts-node
 
       - name: Frontend Build
         run: |
@@ -80,4 +103,4 @@ jobs:
           STACK_ENVIRONMENT: production
           CDK_DEFAULT_ACCOUNT: ${{ secrets.CDK_DEFAULT_ACCOUNT_PROD }}
           CDK_DEFAULT_REGION: ${{ env.AWS_REGION }}
-          DOMAIN_NAME: "pablo-magro-gaspar.site"
+          DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
