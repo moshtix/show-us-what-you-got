@@ -20,7 +20,7 @@ new ReactAppCdkStack(app, 'ReactAppCdkStack', {
 
   /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
   env: {
-    region: 'ap-southeast-2', // using Sydney region
+    region: process.env.CDK_DEFAULT_REGION,
     account: process.env.CDK_DEFAULT_ACCOUNT // changing account to env var
   },
   stage: process.env.STAGE!,
