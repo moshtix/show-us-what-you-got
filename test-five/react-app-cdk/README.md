@@ -1,8 +1,16 @@
-# Welcome to your CDK TypeScript project
+# AWS CDK Typescript Project
+This aws cdk project creates an s3 bucket and a cloudfront distribution to host a static react application.
 
-This is a blank project for CDK development with TypeScript.
+## Set app variables
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+* `export STAGE=[stage-name]`   sets the stage or environment for the app
+
+## Set aws env variables
+
+* `export CDK_DEFAULT_REGION=[region]`   sets the stage or environment for the app
+* `export CDK_DEFAULT_ACCOUNT=[AWS account number]`   sets the stage or environment for the app
+
+Make sure to also set the `AWS_ACCESS_KEY` and `AWS_SECRET_KEY` before running the cdk commands
 
 ## Useful commands
 
