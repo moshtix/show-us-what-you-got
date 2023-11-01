@@ -123,12 +123,11 @@ jobs:
       - name: Deploy to ${{ env.STACK_ENVIRONMENT }} AWS
         run: |
           cd infrastructure
-          cdk deploy TestFiveStack --parameters Environment=${{ env.STACK_ENVIRONMENT }} --parameters SnsRecipient=${{ secrets.SNS_RECIPIENT }} --require-approval never --progress=events --no-cli-pager
+          cdk deploy --context config=production --require-approval never --progress=events --no-cli-pager
         env:
           STACK_ENVIRONMENT: production
           CDK_DEFAULT_ACCOUNT: ${{ secrets.CDK_DEFAULT_ACCOUNT_PROD }}
           CDK_DEFAULT_REGION: ${{ env.AWS_REGION }}
-          DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
 
       # DEEM: Deploy stack to pre-production/testing environment.
 

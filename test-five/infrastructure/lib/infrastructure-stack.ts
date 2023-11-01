@@ -11,12 +11,8 @@ import {
   aws_sns as sns,
   aws_sns_subscriptions as subscriptions,
   CfnOutput,
-  CfnParameter,
   RemovalPolicy
 } from 'aws-cdk-lib';
-
-// Setting the domain name.
-const DOMAIN_NAME = process.env.DOMAIN_NAME!;
 
 /**
  * Represents the CloudFormation stack for the TestFive application.
@@ -24,23 +20,10 @@ const DOMAIN_NAME = process.env.DOMAIN_NAME!;
  * @extends cdk.Stack
  */
 export class TestFiveStack extends cdk.Stack {
-  constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
+  constructor(scope: cdk.App, config: any, id: string, props?: cdk.StackProps) {
+    const environment = config.Environment;
+
     super(scope, id, props);
-
-    /**
-     * 👉 Environment Variable:
-     */
-
-    const envParameter = new CfnParameter(this, "Environment", {
-      type: "String",
-      description: "The app environment, e.g. prod",
-      default: "local"
-    });
-
-    const snsRecipientParameter = new CfnParameter(this, "SnsRecipient", {
-      type: "String",
-      description: "Email recipient for alarm sns",
-    });
 
     /**
      * 👉 Stack Definition:
@@ -48,7 +31,7 @@ export class TestFiveStack extends cdk.Stack {
 
     // Create an S3 bucket for the React app.
     const reactAppBucket = new s3.Bucket(this, "ReactAppBucket", {
-      bucketName: `moshtix-fronted-${envParameter.valueAsString}`,
+      bucketName: `moshtix-fronted-${environment}`,
       publicReadAccess: false,
       removalPolicy: RemovalPolicy.DESTROY,
       websiteIndexDocument: "index.html",
@@ -68,13 +51,13 @@ export class TestFiveStack extends cdk.Stack {
 
     // Look up the hosted zone in Route 53 using the provided domain name.
     const zone = route53.HostedZone.fromLookup(this, 'HostedZone', {
-      domainName: DOMAIN_NAME
+      domainName: config.domainName
     });
 
     // Create a DNS-validated certificate for the domain.
     const siteCertificate = new acm.DnsValidatedCertificate(this, 'Certificate', {
-      domainName: DOMAIN_NAME,
-      subjectAlternativeNames: ['*.' + DOMAIN_NAME],
+      domainName: config.domainName,
+      subjectAlternativeNames: ['*.' + config.domainName],
       hostedZone: zone,
       // The certificate must be issued in the us-east-1 (N. Virginia) region for it to be used with CloudFront.
       region: 'us-east-1'
@@ -91,7 +74,7 @@ export class TestFiveStack extends cdk.Stack {
         }
       ],
       viewerCertificate: cloudfront.ViewerCertificate.fromAcmCertificate(siteCertificate, {
-        aliases: [DOMAIN_NAME, `www.${DOMAIN_NAME}`],
+        aliases: [config.domainName, `www.${config.domainName}`],
         securityPolicy: cloudfront.SecurityPolicyProtocol.TLS_V1_2_2021,
         sslMethod: cloudfront.SSLMethod.SNI
       })
@@ -105,7 +88,7 @@ export class TestFiveStack extends cdk.Stack {
 
     // Deploy the React app to the S3 bucket.
     new s3Deploy.BucketDeployment(this, "DeployCRA", {
-      sources: [s3Deploy.Source.asset(__dirname + "/../../frontend/build")],
+      sources: [s3Deploy.Source.asset(__dirname + `/../../frontend/${config.frontendSources}`)],
       destinationBucket: reactAppBucket,
       distribution: cloudFrontWebDistribution,
       distributionPaths: ['/*'],
@@ -118,7 +101,7 @@ export class TestFiveStack extends cdk.Stack {
     // Create an SNS Topic and a subscription.
     const snsTopic = new sns.Topic(this, 'SNSTopic');
     snsTopic.addSubscription(
-      new subscriptions.EmailSubscription(`${snsRecipientParameter.valueAsString}`)
+      new subscriptions.EmailSubscription(config.snsRecipient)
     );
 
     // Sets up an alarm that triggers if there are more than 100 errors in a 5-minute period for two consecutive periods.
