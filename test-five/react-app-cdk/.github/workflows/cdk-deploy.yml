@@ -1,18 +1,14 @@
 name: CDK Deploy
 
 on:
-  pull_request:
-    types:
-    - closed
+  push:
+    
     
 
 jobs:
   deploy:
-    if: github.event.pull_request.merged == true
+    # if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read 
 
     steps:
     - name: Checkout code
