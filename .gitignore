@@ -3,9 +3,6 @@ node_modules
 lib
 coverage
 test-five/node_modules
-test-five/app/node_modules
-test-five/app/build
-test-five/app/public
-test-five/app/src
+test-five/app
 test-five/lib
 test-five/test
