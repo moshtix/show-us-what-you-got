@@ -4,5 +4,7 @@ lib
 coverage
 test-five/node_modules
 test-five/app/node_modules
+test-five/app/public
+test-five/app/src
 test-five/lib
 test-five/test
