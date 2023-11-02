@@ -8,22 +8,20 @@ import * as route53 from "aws-cdk-lib/aws-route53";
 import * as s3Deploy from "aws-cdk-lib/aws-s3-deployment";
 // import * as snsSubscriptions from "aws-cdk-lib/aws-sns-subscriptions";
 import { CfnOutput } from 'aws-cdk-lib';
-import { Template } from "aws-cdk-lib/assertions";
-import { TestFiveStack } from '../lib/infrastructure-stack';
+import { TestFiveStack, StackConfig } from '../lib/infrastructure-stack';
 import '@aws-cdk/assert/jest';
 
 describe('TestFiveStack', () => {
 
-  const config = {
-    "Environment": "test",
+  const config: StackConfig = {
+    "environment": "test",
     "frontendSources": "build",
-    "domainName": "moshtix.test.site",
-    "snsRecipient": "moshtix-recipient-test@gmail.com"
+    "domainName": "test.site",
+    "snsRecipient": "recipient-test@gmail.com"
   };
 
   let app: cdk.App;
   let stack: TestFiveStack;
-  let template: Template;
 
   beforeEach(() => {
     app = new cdk.App();
@@ -33,7 +31,6 @@ describe('TestFiveStack', () => {
         region: 'test-region-1',
       }
     });
-    template = Template.fromStack(stack);
   });
 
   test('TestFiveStack should create an S3 bucket', () => {
@@ -46,7 +43,7 @@ describe('TestFiveStack', () => {
 
   test('TestFiveStack should create a CloudFront distribution', () => {
     // Act
-    const distribution = stack.node.findChild('CDKCRAStaticDistribution');
+    const distribution = stack.node.findChild(`moshtix-test-five-distribution-${config.environment}`);
 
     // Assert
     expect(distribution).toBeInstanceOf(cloudfront.CloudFrontWebDistribution);
@@ -54,7 +51,7 @@ describe('TestFiveStack', () => {
 
   test('TestFiveStack should create an ACM certificate', () => {
     // Act
-    const certificate = stack.node.findChild('Certificate');
+    const certificate = stack.node.findChild('Certificate Test Five');
 
     // Assert
     expect(certificate).toBeInstanceOf(acm.DnsValidatedCertificate);
@@ -70,7 +67,7 @@ describe('TestFiveStack', () => {
 
   test('TestFiveStack should deploy the React app to the S3 bucket', () => {
     // Act
-    const deployment = stack.node.findChild('DeployCRA');
+    const deployment = stack.node.findChild(`moshtix-test-five-s3-deployment-${config.environment}`);
 
     // Assert
     expect(deployment).toBeInstanceOf(s3Deploy.BucketDeployment);
@@ -78,7 +75,7 @@ describe('TestFiveStack', () => {
 
   test('TestFiveStack should create an alarm that triggers if there are more than 100 errors in a 5-minute period for two consecutive periods', () => {
     // Act
-    const alarm = stack.node.findChild('HighErrorRate');
+    const alarm = stack.node.findChild(`moshtix-test-five-alarm-higherrorrate-${config.environment}`);
 
     // Assert
     expect(alarm).toBeInstanceOf(cloudwatch.Alarm);
@@ -91,8 +88,8 @@ describe('TestFiveStack', () => {
 
   test('TestFiveStack should create an SNS topic and a subscription', () => {
     // Act
-    const topic = stack.node.findChild('SNSTopic');
-    const subscription = stack.node.findChild('HighErrorRate');
+    const topic = stack.node.findChild('moshtix-test-five-sns');
+    const subscription = stack.node.findChild(`moshtix-test-five-alarm-higherrorrate-${config.environment}`);
 
     // Assert
     expect(topic).toBeInstanceOf(sns.Topic);
@@ -101,7 +98,7 @@ describe('TestFiveStack', () => {
 
   test('TestFiveStack should create an alarm that triggers if the average 4xx error rate exceeds 1% in a 5-minute period for two consecutive periods', () => {
     // Act
-    const alarm = stack.node.findChild('HighCloudFront4xxErrorRate') as cloudwatch.Alarm;
+    const alarm = stack.node.findChild(`moshtix-test-five-alarm-highcloudfront4xxerrorrate-${config.environment}`) as cloudwatch.Alarm;
 
     // Assert
     expect(alarm).toBeInstanceOf(cloudwatch.Alarm);
@@ -119,7 +116,7 @@ describe('TestFiveStack', () => {
 
   test('TestFiveStack should add an SNS action to the CloudFront 4xx error rate alarm', () => {
     // Act
-    const alarm = stack.node.findChild('HighCloudFront4xxErrorRate');
+    const alarm = stack.node.findChild(`moshtix-test-five-alarm-highcloudfront4xxerrorrate-${config.environment}`);
 
     // Assert
     // expect(alarm.alarmActions[0]).toBeInstanceOf(cw_actions.SnsAction);
@@ -139,8 +136,8 @@ describe('TestFiveStack', () => {
     const dashboard = stack.node.findChild('Test Five Dashboard');
 
     // Assert
-    // expect(dashboard.widgets).toContainEqual(new cloudwatch.AlarmWidget({ title: 'High Error Rate', alarm: stack.node.findChild('HighErrorRate') }));
-    // expect(dashboard.widgets).toContainEqual(new cloudwatch.AlarmWidget({ title: 'High Cloud Front 4xx Error Rate', alarm: stack.node.findChild('HighCloudFront4xxErrorRate') }));
+    // expect(dashboard.widgets).toContainEqual(new cloudwatch.AlarmWidget({ title: 'High Error Rate', alarm: stack.node.findChild(`moshtix-test-five-alarm-higherrorrate-${config.environment}`') });
+    // expect(dashboard.widgets).toContainEqual(new cloudwatch.AlarmWidget({ title: 'High Cloud Front 4xx Error Rate', alarm: stack.node.findChild(`moshtix-test-five-alarm-highcloudfront4xxerrorrate-${config.environment}`) }));
   });
 
   test('TestFiveStack should create CfnOutputs for the React app bucket name, the CloudFront distribution domain name, and the site certificate certificate ARN', () => {
@@ -154,4 +151,5 @@ describe('TestFiveStack', () => {
     expect(cloudFrontDistributionDomainNameOutput).toBeInstanceOf(CfnOutput);
     expect(siteCertificateCertificateArnOutput).toBeInstanceOf(CfnOutput);
   });
+
 });

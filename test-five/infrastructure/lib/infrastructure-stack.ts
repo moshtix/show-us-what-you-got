@@ -14,14 +14,26 @@ import {
   RemovalPolicy
 } from 'aws-cdk-lib';
 
+// Needed Stack varaibles.
+export interface StackConfig {
+  environment: string;
+  domainName: string;
+  frontendSources: string;
+  snsRecipient: string;
+}
+
 /**
  * Represents the CloudFormation stack for the TestFive application.
  * @class
  * @extends cdk.Stack
  */
 export class TestFiveStack extends cdk.Stack {
-  constructor(scope: cdk.App, config: any, id: string, props?: cdk.StackProps) {
-    const environment = config.Environment;
+  constructor(scope: cdk.App, config: StackConfig, id: string, props?: cdk.StackProps) {
+    const environment = config.environment;
+    props = {
+      ...props,
+      stackName: `moshtix-test-five-stack-${environment}`
+    }
 
     super(scope, id, props);
 
@@ -31,18 +43,11 @@ export class TestFiveStack extends cdk.Stack {
 
     // Create an S3 bucket for the React app.
     const reactAppBucket = new s3.Bucket(this, "ReactAppBucket", {
-      bucketName: `moshtix-fronted-${environment}`,
+      bucketName: `moshtix-test-five-fronted-${environment}`,
       publicReadAccess: false,
       removalPolicy: RemovalPolicy.DESTROY,
       websiteIndexDocument: "index.html",
       autoDeleteObjects: true,
-      // Needed in some scenarios, need more investigation.
-      // blockPublicAccess: {
-      //   blockPublicAcls: false,
-      //   blockPublicPolicy: false,
-      //   ignorePublicAcls: false,
-      //   restrictPublicBuckets: false,
-      // } as s3.BlockPublicAccess
     });
 
     // Create an Origin Access Identity (OAI) for CloudFront.
@@ -55,16 +60,17 @@ export class TestFiveStack extends cdk.Stack {
     });
 
     // Create a DNS-validated certificate for the domain.
-    const siteCertificate = new acm.DnsValidatedCertificate(this, 'Certificate', {
+    const siteCertificate = new acm.DnsValidatedCertificate(this, 'Certificate Test Five', {
       domainName: config.domainName,
-      subjectAlternativeNames: ['*.' + config.domainName],
+      subjectAlternativeNames: [`*.${config.domainName}`],
       hostedZone: zone,
       // The certificate must be issued in the us-east-1 (N. Virginia) region for it to be used with CloudFront.
       region: 'us-east-1'
     });
 
     // Create a CloudFront distribution for the React app.
-    const cloudFrontWebDistribution = new cloudfront.CloudFrontWebDistribution(this, "CDKCRAStaticDistribution", {
+    const cloudFrontWebDistribution = new cloudfront.CloudFrontWebDistribution(
+      this, `moshtix-test-five-distribution-${environment}`, {
       originConfigs: [
         {
           s3OriginSource: {
@@ -87,7 +93,7 @@ export class TestFiveStack extends cdk.Stack {
     });
 
     // Deploy the React app to the S3 bucket.
-    new s3Deploy.BucketDeployment(this, "DeployCRA", {
+    new s3Deploy.BucketDeployment(this, `moshtix-test-five-s3-deployment-${environment}`, {
       sources: [s3Deploy.Source.asset(__dirname + `/../../frontend/${config.frontendSources}`)],
       destinationBucket: reactAppBucket,
       distribution: cloudFrontWebDistribution,
@@ -99,13 +105,16 @@ export class TestFiveStack extends cdk.Stack {
      */
 
     // Create an SNS Topic and a subscription.
-    const snsTopic = new sns.Topic(this, 'SNSTopic');
+    const snsTopic = new sns.Topic(this, "moshtix-test-five-sns", {
+      displayName: `${this.stackName} SNS`,
+      topicName: `moshtix-test-five-sns-topic-${environment}`,
+    });
     snsTopic.addSubscription(
       new subscriptions.EmailSubscription(config.snsRecipient)
     );
 
     // Sets up an alarm that triggers if there are more than 100 errors in a 5-minute period for two consecutive periods.
-    const s3BucketSizeAlarm = new cloudwatch.Alarm(this, 'HighErrorRate', {
+    const s3BucketSizeAlarm = new cloudwatch.Alarm(this, `moshtix-test-five-alarm-higherrorrate-${environment}`, {
       metric: new cloudwatch.Metric({
         metricName: 'NumberOfErrors',
         namespace: 'AWS/S3',
@@ -126,7 +135,7 @@ export class TestFiveStack extends cdk.Stack {
     s3BucketSizeAlarm.addAlarmAction(new cw_actions.SnsAction(snsTopic));
 
     // Alarm that triggers if the average 4xx error rate exceeds 1% in a 5-minute period for two consecutive periods.
-    const cloudWatch4xxErrorAlarm = new cloudwatch.Alarm(this, 'HighCloudFront4xxErrorRate', {
+    const cloudWatch4xxErrorAlarm = new cloudwatch.Alarm(this, `moshtix-test-five-alarm-highcloudfront4xxerrorrate-${environment}`, {
       metric: new cloudwatch.Metric({
         metricName: '4xxErrorRate',
         namespace: 'AWS/CloudFront',
@@ -148,16 +157,15 @@ export class TestFiveStack extends cdk.Stack {
 
     // Create a Dashboard for Monitoring and Managing Alarms
     const dashboard = new cloudwatch.Dashboard(this, "Test Five Dashboard", {
-      dashboardName: "test-five-infrastructure-dashboard",
+      dashboardName: `moshtix-test-five-infrastructure-dashboard-${config.environment}`,
     });
     dashboard.addWidgets(
       new cloudwatch.AlarmWidget({ title: "High Error Rate", alarm: s3BucketSizeAlarm })
     );
-    dashboard.addWidgets(
-      new cloudwatch.AlarmWidget({
-        title: "High Cloud Front 4xx Error Rate",
-        alarm: cloudWatch4xxErrorAlarm
-      })
+    dashboard.addWidgets(new cloudwatch.AlarmWidget({
+      title: "High Cloud Front 4xx Error Rate",
+      alarm: cloudWatch4xxErrorAlarm
+    })
     );
 
     /**
