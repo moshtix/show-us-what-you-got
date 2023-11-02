@@ -79,8 +79,37 @@ jobs:
           host: ${{ secrets.SONARQUBE_HOST }}
           login: ${{ secrets.SONARQUBE_TOKEN }}
 
-  build-and-deploy:
+  check-deploy-diff:
+    # Safety Check: Before applying changes to production.
     needs: [unit-test-frontend, unit-test-infrastructure]
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: test-five/infrastructure
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - run: |
+          npm install -g aws-cdk
+          npm install -g ts-node
+
+      - run: |
+          cdk diff
+
+  build-and-deploy:
+    needs: [
+      unit-test-frontend,
+      unit-test-infrastructure,
+      check-deploy-diff
+    ]
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     defaults:
