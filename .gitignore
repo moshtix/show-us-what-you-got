@@ -2,3 +2,7 @@
 node_modules
 lib
 coverage
+test-five/node_modules
+test-five/app
+test-five/lib
+test-five/test
