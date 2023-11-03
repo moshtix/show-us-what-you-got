@@ -27,12 +27,13 @@ export interface StackConfig {
  * @class
  * @extends cdk.Stack
  */
-export class TestFiveStack extends cdk.Stack {
+export class TestFiveS3WebSiteStack extends cdk.Stack {
   constructor(scope: cdk.App, config: StackConfig, id: string, props?: cdk.StackProps) {
     const environment = config.environment;
     props = {
       ...props,
-      stackName: `moshtix-test-five-stack-${environment}`
+      stackName: `moshtix-test-five-stack-${environment}`,
+      description: `Frontend deployment stack ${environment}`
     }
 
     super(scope, id, props);
@@ -47,12 +48,12 @@ export class TestFiveStack extends cdk.Stack {
       publicReadAccess: false,
       removalPolicy: RemovalPolicy.DESTROY,
       websiteIndexDocument: "index.html",
-      autoDeleteObjects: true,
+      encryption: s3.BucketEncryption.S3_MANAGED,
     });
 
     // Create an Origin Access Identity (OAI) for CloudFront.
-    const cloudFrontOAI = new cloudfront.OriginAccessIdentity(this, 'OAI');
-    reactAppBucket.grantRead(cloudFrontOAI.grantPrincipal);
+    const originAccess = new cloudfront.OriginAccessIdentity(this, 'OriginAccessControl');
+    reactAppBucket.grantRead(originAccess.grantPrincipal);
 
     // Look up the hosted zone in Route 53 using the provided domain name.
     const zone = route53.HostedZone.fromLookup(this, 'HostedZone', {
@@ -74,7 +75,8 @@ export class TestFiveStack extends cdk.Stack {
       originConfigs: [
         {
           s3OriginSource: {
-            s3BucketSource: reactAppBucket
+            s3BucketSource: reactAppBucket,
+            originAccessIdentity: originAccess
           },
           behaviors: [{ isDefaultBehavior: true }]
         }
@@ -89,7 +91,10 @@ export class TestFiveStack extends cdk.Stack {
     // Create an alias record in Route 53 that points to the CloudFront distribution.
     new route53.ARecord(this, 'Alias', {
       zone: zone,
-      target: route53.RecordTarget.fromAlias(new targets.CloudFrontTarget(cloudFrontWebDistribution))
+      target: route53.RecordTarget.fromAlias(new targets.CloudFrontTarget(cloudFrontWebDistribution)),
+      // TTL of 30 seconds keeps the performance tempo high,
+      // promising a smooth and responsive experience.
+      ttl : cdk.Duration.seconds(30),
     });
 
     // Deploy the React app to the S3 bucket.

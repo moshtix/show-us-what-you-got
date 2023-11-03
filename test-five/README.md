@@ -27,6 +27,7 @@ The following diagram shows a high-level architecture of the proposed solution:
 
   **User** -> **Route 53** -> **CloudFront** -> **S3**
 
+![AWS Route53 Hosted Zone](./images/AWS-S3-Bucket-as-Origin-Server.png)
 
 ## Comparison of Cost with Other Solutions
 
@@ -47,9 +48,3 @@ Compared to other solutions, such as hosting the React app on a traditional web 
 - Route53 Hosted Zone
 
 ![AWS Route53 Hosted Zone](./images/AWS-Route53-Hosted-Zone.png)
-
-
-
-
-
-

@@ -8,10 +8,10 @@ import * as route53 from "aws-cdk-lib/aws-route53";
 import * as s3Deploy from "aws-cdk-lib/aws-s3-deployment";
 // import * as snsSubscriptions from "aws-cdk-lib/aws-sns-subscriptions";
 import { CfnOutput } from 'aws-cdk-lib';
-import { TestFiveStack, StackConfig } from '../lib/infrastructure-stack';
+import { TestFiveS3WebSiteStack, StackConfig } from '../lib/infrastructure-s3-website-stack';
 import '@aws-cdk/assert/jest';
 
-describe('TestFiveStack', () => {
+describe('TestFiveS3WebSiteStack', () => {
 
   const config: StackConfig = {
     "environment": "test",
@@ -21,11 +21,11 @@ describe('TestFiveStack', () => {
   };
 
   let app: cdk.App;
-  let stack: TestFiveStack;
+  let stack: TestFiveS3WebSiteStack;
 
   beforeEach(() => {
     app = new cdk.App();
-    stack = new TestFiveStack(app, config, 'TestFiveStack', {
+    stack = new TestFiveS3WebSiteStack(app, config, 'TestFiveS3WebSiteStack', {
       env: {
         account: '1234567890',
         region: 'test-region-1',
@@ -33,7 +33,7 @@ describe('TestFiveStack', () => {
     });
   });
 
-  test('TestFiveStack should create an S3 bucket', () => {
+  test('TestFiveS3WebSiteStack should create an S3 bucket', () => {
     // Act
     const bucket = stack.node.findChild('ReactAppBucket');
 
@@ -41,7 +41,7 @@ describe('TestFiveStack', () => {
     expect(bucket).toBeInstanceOf(s3.Bucket);
   });
 
-  test('TestFiveStack should create a CloudFront distribution', () => {
+  test('TestFiveS3WebSiteStack should create a CloudFront distribution', () => {
     // Act
     const distribution = stack.node.findChild(`moshtix-test-five-distribution-${config.environment}`);
 
@@ -49,7 +49,7 @@ describe('TestFiveStack', () => {
     expect(distribution).toBeInstanceOf(cloudfront.CloudFrontWebDistribution);
   });
 
-  test('TestFiveStack should create an ACM certificate', () => {
+  test('TestFiveS3WebSiteStack should create an ACM certificate', () => {
     // Act
     const certificate = stack.node.findChild('Certificate Test Five');
 
@@ -57,7 +57,7 @@ describe('TestFiveStack', () => {
     expect(certificate).toBeInstanceOf(acm.DnsValidatedCertificate);
   });
 
-  test('TestFiveStack should create a Route 53 record for the CloudFront distribution', () => {
+  test('TestFiveS3WebSiteStack should create a Route 53 record for the CloudFront distribution', () => {
     // Act
     const record = stack.node.findChild('Alias');
 
@@ -65,7 +65,7 @@ describe('TestFiveStack', () => {
     expect(record).toBeInstanceOf(route53.ARecord);
   });
 
-  test('TestFiveStack should deploy the React app to the S3 bucket', () => {
+  test('TestFiveS3WebSiteStack should deploy the React app to the S3 bucket', () => {
     // Act
     const deployment = stack.node.findChild(`moshtix-test-five-s3-deployment-${config.environment}`);
 
@@ -73,7 +73,7 @@ describe('TestFiveStack', () => {
     expect(deployment).toBeInstanceOf(s3Deploy.BucketDeployment);
   });
 
-  test('TestFiveStack should create an alarm that triggers if there are more than 100 errors in a 5-minute period for two consecutive periods', () => {
+  test('TestFiveS3WebSiteStack should create an alarm that triggers if there are more than 100 errors in a 5-minute period for two consecutive periods', () => {
     // Act
     const alarm = stack.node.findChild(`moshtix-test-five-alarm-higherrorrate-${config.environment}`);
 
@@ -86,7 +86,7 @@ describe('TestFiveStack', () => {
     // expect(alarm.alarmDescription).toBe('S3 bucket number of errors.');
   });
 
-  test('TestFiveStack should create an SNS topic and a subscription', () => {
+  test('TestFiveS3WebSiteStack should create an SNS topic and a subscription', () => {
     // Act
     const topic = stack.node.findChild('moshtix-test-five-sns');
     const subscription = stack.node.findChild(`moshtix-test-five-alarm-higherrorrate-${config.environment}`);
@@ -96,7 +96,7 @@ describe('TestFiveStack', () => {
     // expect(subscription).toBeInstanceOf(snsSubscriptions.EmailSubscription);
   });
 
-  test('TestFiveStack should create an alarm that triggers if the average 4xx error rate exceeds 1% in a 5-minute period for two consecutive periods', () => {
+  test('TestFiveS3WebSiteStack should create an alarm that triggers if the average 4xx error rate exceeds 1% in a 5-minute period for two consecutive periods', () => {
     // Act
     const alarm = stack.node.findChild(`moshtix-test-five-alarm-highcloudfront4xxerrorrate-${config.environment}`) as cloudwatch.Alarm;
 
@@ -114,7 +114,7 @@ describe('TestFiveStack', () => {
     // expect(alarm.alarmDescription).toBe('S3 bucket number of errors.');
   });
 
-  test('TestFiveStack should add an SNS action to the CloudFront 4xx error rate alarm', () => {
+  test('TestFiveS3WebSiteStack should add an SNS action to the CloudFront 4xx error rate alarm', () => {
     // Act
     const alarm = stack.node.findChild(`moshtix-test-five-alarm-highcloudfront4xxerrorrate-${config.environment}`);
 
@@ -122,7 +122,7 @@ describe('TestFiveStack', () => {
     // expect(alarm.alarmActions[0]).toBeInstanceOf(cw_actions.SnsAction);
   });
 
-  test('TestFiveStack should create a dashboard for monitoring and managing alarms', () => {
+  test('TestFiveS3WebSiteStack should create a dashboard for monitoring and managing alarms', () => {
     // Act
     const dashboard = stack.node.findChild('Test Five Dashboard');
 
@@ -131,7 +131,7 @@ describe('TestFiveStack', () => {
     // expect(dashboard.dashboardName).toBe('test-five-infrastructure-dashboard');
   });
 
-  test('TestFiveStack should add widgets to the dashboard for the high error rate alarm and the high CloudFront 4xx error rate alarm', () => {
+  test('TestFiveS3WebSiteStack should add widgets to the dashboard for the high error rate alarm and the high CloudFront 4xx error rate alarm', () => {
     // Act
     const dashboard = stack.node.findChild('Test Five Dashboard');
 
@@ -140,7 +140,7 @@ describe('TestFiveStack', () => {
     // expect(dashboard.widgets).toContainEqual(new cloudwatch.AlarmWidget({ title: 'High Cloud Front 4xx Error Rate', alarm: stack.node.findChild(`moshtix-test-five-alarm-highcloudfront4xxerrorrate-${config.environment}`) }));
   });
 
-  test('TestFiveStack should create CfnOutputs for the React app bucket name, the CloudFront distribution domain name, and the site certificate certificate ARN', () => {
+  test('TestFiveS3WebSiteStack should create CfnOutputs for the React app bucket name, the CloudFront distribution domain name, and the site certificate certificate ARN', () => {
     // Act
     const reactAppBucketNameOutput = stack.node.findChild('reactAppBucketName');
     const cloudFrontDistributionDomainNameOutput = stack.node.findChild('cloudFrontDistributionDomainName');
